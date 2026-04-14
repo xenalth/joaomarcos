@@ -44,8 +44,8 @@ const feedHref = lang === 'pt' ? `${base}/feed.xml` : `${base}/en/feed.xml`;
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={ogDescription} />
 
-    <link rel="alternate" hreflang="pt" href={`${Astro.site}${base.replace(/^\//, '')}/`} />
-    <link rel="alternate" hreflang="en" href={`${Astro.site}${base.replace(/^\//, '')}/en`} />
+    <link rel="alternate" hreflang="pt" href={new URL(base || '/', Astro.site)} />
+    <link rel="alternate" hreflang="en" href={new URL(`${base}/en`, Astro.site)} />
     <link rel="alternate" type="application/rss+xml" title={`${siteName} — RSS`} href={feedHref} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
   </head>
