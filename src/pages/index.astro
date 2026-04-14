@@ -9,11 +9,12 @@ const recent = allPosts
   .slice(0, 4);
 ---
 
-<BaseLayout title="João Marcos" lang="pt" description="Head de Produto. Escreve sobre ética em produto, decisão e o que times devem às pessoas que constroem.">
+<BaseLayout title="João Marcos" lang="pt" description="Head de Produto · Pagamentos & Fintech. Escreve sobre ética em produto, decisão e o que times devem às pessoas que constroem.">
   <div class="page-shell">
     <section class="hero">
       <h1>Penso sobre o que times de produto devem às pessoas que estão construindo.</h1>
-      <p>Sete anos em produto, dez em tech. A interseção entre decisão de produto e ética ainda é tratada como nota de rodapé. Estou escrevendo sobre isso.</p>
+      <p class="tagline">Head de Produto · Pagamentos & Fintech · São Paulo</p>
+      <p>Mais de uma década em tech, os últimos sete em produto. A interseção entre decisão de produto e ética ainda é tratada como nota de rodapé. Estou escrevendo sobre isso.</p>
     </section>
 
     {recent.length > 0 && (
@@ -49,6 +50,13 @@ const recent = allPosts
     font-weight: 500;
     line-height: var(--leading-tight);
     letter-spacing: -0.02em;
+    margin-bottom: var(--space-6);
+  }
+  .tagline {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
     margin-bottom: var(--space-6);
   }
   .hero p {

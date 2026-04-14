@@ -9,11 +9,12 @@ const recent = allPosts
   .slice(0, 4);
 ---
 
-<BaseLayout title="João Marcos" lang="en" description="Head of Product. Writes about product ethics, decision-making, and what teams owe the people they build for.">
+<BaseLayout title="João Marcos" lang="en" description="Head of Product · Payments & Fintech. Writes about product ethics, decision-making, and what teams owe the people they build for.">
   <div class="page-shell">
     <section class="hero">
       <h1>I think about what product teams owe the people they're building for.</h1>
-      <p>Seven years in product, ten in tech. The intersection of product decision-making and ethics is still treated as a footnote. I'm writing about it.</p>
+      <p class="tagline">Head of Product · Payments & Fintech · São Paulo</p>
+      <p>Over a decade in tech, the last seven in product. The intersection of product decision-making and ethics is still treated as a footnote. I'm writing about it.</p>
     </section>
 
     {recent.length > 0 && (
@@ -49,6 +50,13 @@ const recent = allPosts
     font-weight: 500;
     line-height: var(--leading-tight);
     letter-spacing: -0.02em;
+    margin-bottom: var(--space-6);
+  }
+  .tagline {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
     margin-bottom: var(--space-6);
   }
   .hero p {
