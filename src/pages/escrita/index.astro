@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import WritingList from '../../components/writing/WritingList.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('writing-pt', ({ data }) => !data.draft);
+const posts = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .map((p) => ({
+    slug: p.id,
+    title: p.data.title,
+    date: p.data.date,
+    type: p.data.type,
+  }));
+---
+
+<BaseLayout title="Escrita" description="Ensaios e cases sobre produto e ética." lang="pt">
+  <div class="page-shell">
+    <header class="writing-header">
+      <h1>Escrita</h1>
+      <p>Ensaios e cases estruturados como argumentos, não documentação de processo. Os cases mostram julgamento, não método.</p>
+    </header>
+    <WritingList items={posts} lang="pt" />
+  </div>
+</BaseLayout>
+
+<style>
+  .writing-header {
+    padding: var(--space-16) 0 var(--space-12);
+    max-width: var(--prose-width);
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-4);
+  }
+  p {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.65;
+    max-width: 52ch;
+    font-style: italic;
+  }
+</style>

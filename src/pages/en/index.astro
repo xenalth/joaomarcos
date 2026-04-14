@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('writing-en', ({ data }) => !data.draft);
+const recent = allPosts
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 4);
+---
+
+<BaseLayout title="João Marcos" lang="en" description="Head of Product. Writes about product ethics, decision-making, and what teams owe the people they build for.">
+  <div class="page-shell">
+    <section class="hero">
+      <h1>I think about what product teams owe the people they're building for.</h1>
+      <p>Seven years in product, ten in tech. The intersection of product decision-making and ethics is still treated as a footnote. I'm writing about it.</p>
+    </section>
+
+    {recent.length > 0 && (
+      <section class="recent">
+        <div class="section-label">Recent writing</div>
+        <ul class="home-list">
+          {recent.map((post) => (
+            <li>
+              <a href={`/en/writing/${post.id}`}>
+                <span>{post.data.title}</span>
+                <span class="item-meta">
+                  {post.data.type === 'essay' ? 'Essay' : 'Case'} ·{' '}
+                  {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a href="/en/writing" class="see-all">See all writing →</a>
+      </section>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding: var(--space-24) 0 var(--space-16);
+    max-width: var(--prose-width);
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-6);
+  }
+  .hero p {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    line-height: 1.7;
+    max-width: 54ch;
+  }
+
+  .recent {
+    padding-bottom: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-12);
+    max-width: 860px;
+  }
+  .section-label {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+  .home-list { list-style: none; }
+  .home-list li {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-4) 0;
+  }
+  .home-list li:last-child { border-bottom: 1px solid var(--color-border); }
+  .home-list a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    transition: color 0.15s;
+  }
+  .home-list a:hover { color: var(--color-accent); }
+  .item-meta {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .see-all {
+    display: inline-block;
+    margin-top: var(--space-8);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+  }
+</style>

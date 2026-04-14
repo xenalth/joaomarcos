@@ -1,0 +1,6 @@
+/** Estimates reading time from raw markdown/MDX content string. */
+export function readingTime(content: string): string {
+  const words = content.trim().split(/\s+/).length;
+  const minutes = Math.ceil(words / 200);
+  return `${minutes} min`;
+}

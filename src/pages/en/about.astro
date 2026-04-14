@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+---
+
+<BaseLayout title="About" lang="en" description="Head of Product with a technical background. Fifteen years in tech, seven in product.">
+  <div class="page-shell">
+    <article class="about-content">
+      <h1>About</h1>
+
+      <p class="lead">
+        I got into tech 15 years ago. Spent the first eight as a dev, on projects ranging from small startups to large-scale operations in financial markets. I was always more curious about the problem than the solution. At some point that became impossible to ignore and I moved to product.
+      </p>
+
+      <p>
+        In the seven years since, I've worked in banking and retail, at companies of very different sizes. The sector changed, the methodology changed, the team size changed. The question that wouldn't leave was always the same: who does this decision actually serve?
+      </p>
+
+      <p>
+        At some point along that journey, I lived through situations that bothered me more than they should have. Moments when the product told the user one thing while intending to do another. When communication was designed to guide, not to inform. The industry has nice names for this — conversion optimization, guided experience. In practice, it's a lack of transparency with the people who trust what you built. And that became a line I can no longer ignore.
+      </p>
+
+      <div class="beliefs">
+        <h3>Some things I believe</h3>
+        <ul>
+          <li>Every roadmap decision leaves someone out. The question is whether the team was honest about who.</li>
+          <li>When product becomes a bridge only on paper, engineering optimizes what's possible, design optimizes what's desirable, and nobody optimizes what's necessary.</li>
+          <li>When the team discusses success metrics only after launch, the discussion already came too late.</li>
+          <li>Case studies that lead with percentages without business context are showing numbers, not reasoning.</li>
+        </ul>
+      </div>
+
+      <p>
+        I write here because thinking out loud forces me to have a real argument. And because the conversation about product ethics is still treated as academic niche-ism, when it should be part of the job description for anyone who makes product decisions.
+      </p>
+
+      <p>
+        If you want to talk, <a href="/en/contact">send an email</a> or find me on <a href="https://linkedin.com/in/joaomarcos" target="_blank" rel="noopener">LinkedIn</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-content {
+    max-width: var(--prose-width);
+    margin: 0 auto;
+    padding: var(--space-16) 0 var(--space-24);
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: var(--leading-prose);
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-12);
+  }
+  p { margin-bottom: 1.5em; color: var(--color-text); }
+  .lead { font-size: var(--text-lg); line-height: 1.7; }
+  a { color: var(--color-accent); border-bottom: 1px solid #B8D4C8; }
+  a:hover { color: var(--color-accent-hover); border-color: var(--color-accent); }
+
+  .beliefs {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-8) 0;
+    margin: var(--space-12) 0;
+  }
+  h3 {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+  ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
+  li { padding-left: var(--space-6); position: relative; color: var(--color-text); line-height: 1.6; }
+  li::before { content: '—'; position: absolute; left: 0; color: var(--color-accent); }
+</style>

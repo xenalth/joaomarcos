@@ -1,0 +1,78 @@
+---
+interface WritingItem {
+  slug: string;
+  title: string;
+  date: Date;
+  type: 'essay' | 'case';
+}
+
+interface Props {
+  items: WritingItem[];
+  lang: 'pt' | 'en';
+}
+
+const { items, lang } = Astro.props;
+
+const typeLabel = {
+  pt: { essay: 'Ensaio', case: 'Case' },
+  en: { essay: 'Essay', case: 'Case' },
+}[lang];
+
+const basePath = lang === 'pt' ? '/escrita' : '/en/writing';
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
+    month: 'short', year: 'numeric',
+  });
+}
+---
+
+<ul class="writing-list">
+  {items.map((item) => (
+    <li class="writing-item">
+      <a href={`${basePath}/${item.slug}`}>{item.title}</a>
+      <div class="item-meta">
+        <span class={`tag tag--${item.type}`}>{typeLabel[item.type]}</span>
+        <time datetime={item.date.toISOString()}>{formatDate(item.date)}</time>
+      </div>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .writing-list {
+    list-style: none;
+  }
+  .writing-item {
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-6) 0;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-6);
+    align-items: baseline;
+  }
+  .writing-item:last-child {
+    border-bottom: 1px solid var(--color-border);
+  }
+  .writing-item a {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    transition: color 0.15s;
+  }
+  .writing-item a:hover {
+    color: var(--color-accent);
+  }
+  .item-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-shrink: 0;
+  }
+  time {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+</style>

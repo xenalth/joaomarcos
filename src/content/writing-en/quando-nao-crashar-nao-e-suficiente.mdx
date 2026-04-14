@@ -1,0 +1,87 @@
+---
+title: "When not crashing isn't enough"
+subtitle: "or: what a buggy LoL client taught me about product"
+date: 2026-03-01
+position: "A system can be technically up — no crash, no error, no alert — and still have completely failed the people who matter. Right technical decision + invisible experience = broken product."
+type: case
+originalLang: pt
+draft: false
+---
+
+import PullQuote from '../../components/writing/PullQuote.astro';
+
+The other day I got definitive proof that the LoL client is still in beta lol
+
+I opened the game. Half of it loaded. The other half simply... didn't show up for work.
+
+No error. No warning. Nothing.
+
+If you play LoL, you know this isn't news. The community mantra is old: "the client is garbage", "feels like it's in beta", "over 15 years and they still can't fix it". And look at the scale of this — the most played MOBA in the world, with years of revenue to invest, still generates this perception among its players.
+
+## Investigation
+
+The client opened, I appeared online — but my name had vanished. Empty friends list, and I have a bunch of people on there who are always connected. There was even that little alert button in the corner, you know? The one that lights up when there's a server issue.
+
+Blue. All clear. No visible error.
+
+I went to Riot's status page. Operational. Opened Twitch — a ton of people playing, including on the BR server. Logged into Riot's website just fine.
+
+But the client was still dead.
+
+That's when I took off the gamer skin and put on the dev badge.
+
+I went into the logs. There was an ERROR in caps staring right at me. I threw it into ChatGPT — it identified an SSL issue and gave me a link to access directly in the browser. Certificate error.
+
+Nothing unusual so far. But then came the curiosity: who was issuing this certificate?
+
+It wasn't Riot.
+
+It was Cisco Umbrella — which raised the hypothesis of network interception. I switched to 4G tethered from my phone: worked immediately. Back to Wi-Fi: broke again.
+
+Changed DNS to 1.1.1.1. Client came back. Fully functional. As if nothing had happened.
+
+And it was precisely that "as if nothing had happened" that stuck in my head.
+
+## The discovery and what it reveals
+
+Riot knows.
+
+There's no way they don't. If the client rejects a connection with a certificate from an unknown issuer — and rejects it correctly, mind you — it means it checks. It means at some point someone implemented that validation consciously.
+
+So the client knew something was wrong.
+
+It just didn't tell me. It left me there, staring blankly at the screen, as if it were my job to understand what can or can't happen within a context they defined for the client to work in.
+
+From a security standpoint? Absolutely the right call. Not accepting a certificate from an unknown issuer is exactly what prevents man-in-the-middle attacks. The engineering team did their homework.
+
+But here's the problem: engineering made a technically correct decision — and product wasn't in the room when that decision was made.
+
+Because if they had been, someone would have asked: ok, we reject the connection — but what does the user see?
+
+The current answer is: nothing.
+
+And "nothing" is not an acceptable answer. It's a product decision that nobody owned up to making.
+
+## Not crashing is not the same as delivering an experience
+
+A system can be technically up — no crash, no error, no alert — and still have completely stopped working for the people who matter.
+
+For the user, it doesn't matter that the app didn't crash. It doesn't matter that it stayed open in *working but broken* mode. They couldn't play. End of story.
+
+I lived the opposite of this on a product I worked on. When we designed the menu sync process between devices, we started getting complaints about slowness — that the app was stuck on "Updating Menu". The process took no more than 25 seconds for an average menu. Technically, it was working.
+
+But the user didn't know that.
+
+The solution wasn't to optimize the time. It was to add specific messages about each step of the sync process.
+
+The complaints stopped. Same speed. Completely different experience.
+
+That's what product does — or should do. It's not just about making sure the app doesn't break. It's about making sure the user understands what's happening, has context to interpret what they see, and leaves the interaction without feeling like they were abandoned in the dark.
+
+<PullQuote>
+  Right technical decision + invisible experience = broken product. No matter how many catches the engineering team implemented.
+</PullQuote>
+
+What's the point of engineering thinking through every error handler if product doesn't ensure the user knows what's going on?
+
+That's the question I carry with me. And it's the kind of question I want to keep asking — out loud, right here.

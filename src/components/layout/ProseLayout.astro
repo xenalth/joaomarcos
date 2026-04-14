@@ -1,0 +1,130 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  lang: 'pt' | 'en';
+  slug: string;
+  date: Date;
+  type: 'essay' | 'case';
+  position?: string;
+  readingTime: string;
+}
+
+const { title, subtitle, description, lang, slug, date, type, position, readingTime } = Astro.props;
+
+const typeLabel = {
+  pt: { essay: 'Ensaio', case: 'Case' },
+  en: { essay: 'Essay', case: 'Case' },
+}[lang][type];
+
+const dateStr = date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+
+const backHref = lang === 'pt' ? '/escrita' : '/en/writing';
+const backLabel = lang === 'pt' ? '← Toda a escrita' : '← All writing';
+const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
+---
+
+<BaseLayout {title} {description} {lang} {slug}>
+  <div class="page-shell">
+    <article>
+      <header class="essay-header">
+        <div class="type-label">{typeLabel}</div>
+        <h1>{title}</h1>
+        {subtitle && <p class="subtitle">{subtitle}</p>}
+        {position && <p class="position">{position}</p>}
+        <div class="meta-row">
+          <time datetime={date.toISOString()}>{dateStr}</time>
+          <span class="sep">·</span>
+          <span>{readingTime}</span>
+        </div>
+      </header>
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <footer class="essay-footer">
+        <a href={backHref}>{backLabel}</a>
+        <span class="share-hint">{shareLabel}: <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener">LinkedIn</a></span>
+      </footer>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .essay-header {
+    padding: var(--space-16) 0 var(--space-12);
+    max-width: var(--prose-width);
+    margin: 0 auto;
+  }
+  .type-label {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: var(--space-6);
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin-bottom: var(--space-3);
+  }
+  .subtitle {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+  .position {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-style: italic;
+    color: var(--color-text-muted);
+    border-left: 2px solid var(--color-accent);
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-8);
+    line-height: 1.6;
+  }
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .sep { color: var(--color-border); }
+
+  .essay-footer {
+    max-width: var(--prose-width);
+    margin: var(--space-16) auto 0;
+    padding: var(--space-8) 0 var(--space-24);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-8);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+  .essay-footer a {
+    color: var(--color-accent);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 1px;
+  }
+  .share-hint {
+    color: var(--color-text-muted);
+  }
+</style>

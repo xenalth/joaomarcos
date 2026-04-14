@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact" lang="en">
+  <div class="page-shell">
+    <div class="contact-content">
+      <h1>Contact</h1>
+      <p>If you want to talk about product, ethics, or are thinking about working together — <a href="mailto:oi@joaomarcos.com">oi@joaomarcos.com</a></p>
+      <p class="note">I respond to real conversations. I don't respond to context-free "networking" requests or sponsored content proposals.</p>
+      <div class="links">
+        <a href="https://linkedin.com/in/joaomarcos" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-content {
+    max-width: var(--prose-width);
+    margin: 0 auto;
+    padding: var(--space-16) 0 var(--space-8);
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-8);
+  }
+  p {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: var(--leading-prose);
+    margin-bottom: 1.25em;
+    color: var(--color-text);
+  }
+  a { color: var(--color-accent); border-bottom: 1px solid #B8D4C8; }
+  a:hover { border-color: var(--color-accent); }
+  .note { font-size: var(--text-sm); color: var(--color-text-muted); font-style: italic; }
+  .links { margin-top: var(--space-8); display: flex; gap: var(--space-6); font-family: var(--font-sans); font-size: var(--text-sm); }
+</style>

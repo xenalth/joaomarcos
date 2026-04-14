@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Protótipo — Site Pessoal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Tokens ─────────────────────────────────────────── */
+    :root {
+      --bg:        #F9F7F4;
+      --text:      #1A1A1A;
+      --text-muted:#6B6B6B;
+      --accent:    #2B4C3F;
+      --accent-hover: #1e3830;
+      --border:    #E2DDD8;
+      --serif:     'Lora', Georgia, serif;
+      --sans:      'IBM Plex Sans', system-ui, sans-serif;
+      --prose-width: 68ch;
+      --page-pad:  clamp(1.5rem, 5vw, 4rem);
+    }
+
+    /* ─── Reset ──────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 18px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); }
+
+    /* ─── Page switcher (prototype only) ─────────────────── */
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: block; }
+
+    /* ─── Nav ────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 var(--page-pad);
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .nav-name:hover { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a, .nav-links button {
+      font-family: var(--sans);
+      font-size: 0.833rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .nav-links a:hover, .nav-links button:hover { color: var(--text); }
+    .nav-links .lang-switch {
+      color: var(--text-muted);
+      border-left: 1px solid var(--border);
+      padding-left: 2rem;
+    }
+
+    /* ─── Page shell ─────────────────────────────────────── */
+    .page-content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--page-pad);
+    }
+
+    /* ─── HOME ───────────────────────────────────────────── */
+    .home-hero {
+      padding: 7rem 0 5rem;
+      max-width: var(--prose-width);
+    }
+    .home-hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+    }
+    .home-hero p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 54ch;
+    }
+    .home-divider {
+      width: 3rem;
+      height: 1px;
+      background: var(--border);
+      margin: 4rem 0 3rem;
+    }
+    .home-section-label {
+      font-family: var(--sans);
+      font-size: 0.722rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .home-writing-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .home-writing-list li {
+      border-top: 1px solid var(--border);
+      padding: 1.1rem 0;
+    }
+    .home-writing-list li:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+    .home-writing-list a {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 400;
+      color: var(--text);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: color 0.15s;
+    }
+    .home-writing-list a:hover { color: var(--accent); }
+    .home-writing-list .item-meta {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .home-see-all {
+      display: inline-block;
+      margin-top: 2rem;
+      font-size: 0.833rem;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      color: var(--accent);
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 1px;
+    }
+
+    /* ─── WRITING LIST ───────────────────────────────────── */
+    .writing-header {
+      padding: 5rem 0 3rem;
+      max-width: var(--prose-width);
+    }
+    .writing-header h1 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .writing-header p {
+      font-size: 0.944rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 52ch;
+      font-style: italic;
+    }
+    .writing-list {
+      list-style: none;
+      max-width: 860px;
+      padding-bottom: 5rem;
+    }
+    .writing-list-item {
+      border-top: 1px solid var(--border);
+      padding: 1.4rem 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1.5rem;
+      align-items: baseline;
+    }
+    .writing-list-item:last-child { border-bottom: 1px solid var(--border); }
+    .writing-list-item a {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: var(--text);
+      transition: color 0.15s;
+    }
+    .writing-list-item a:hover { color: var(--accent); }
+    .writing-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .tag {
+      font-family: var(--sans);
+      font-size: 0.667rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2em 0.6em;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--text-muted);
+    }
+    .tag.essay { border-color: #B8D4C8; color: var(--accent); background: #F0F7F4; }
+    .tag.case  { border-color: #C9C1B8; color: #5C4A36; background: #F7F3EF; }
+    .tag.lang-pt { border-color: var(--border); color: var(--text-muted); }
+    .tag.lang-en { border-color: var(--border); color: var(--text-muted); }
+    .writing-date {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* ─── ESSAY / ARTICLE ────────────────────────────────── */
+    .essay-header {
+      padding: 5rem 0 3.5rem;
+      max-width: var(--prose-width);
+      margin: 0 auto;
+    }
+    .essay-type-label {
+      font-family: var(--sans);
+      font-size: 0.722rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .essay-header h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    .essay-position {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--text-muted);
+      border-left: 2px solid var(--accent);
+      padding-left: 1.25rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    .essay-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--sans);
+      font-size: 0.778rem;
+      color: var(--text-muted);
+    }
+    .essay-meta-row .sep { color: var(--border); }
+    .essay-body {
+      max-width: var(--prose-width);
+      margin: 0 auto;
+      padding-bottom: 6rem;
+    }
+    .essay-body p {
+      font-family: var(--serif);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 1.5em;
+      color: var(--text);
+    }
+    .essay-body h2 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      margin: 2.5em 0 0.8em;
+      color: var(--text);
+    }
+    .essay-body h3 {
+      font-family: var(--sans);
+      font-size: 0.833rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin: 2em 0 0.6em;
+    }
+    .essay-body a {
+      color: var(--accent);
+      border-bottom: 1px solid #B8D4C8;
+    }
+    .essay-body a:hover { border-color: var(--accent); }
+    .pull-quote {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--text);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+      margin: 2.5em 0;
+    }
+    .essay-footer {
+      max-width: var(--prose-width);
+      margin: 0 auto;
+      padding: 3rem 0 5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+    .essay-footer p {
+      font-size: 0.833rem;
+      color: var(--text-muted);
+    }
+    .essay-footer a {
+      font-size: 0.833rem;
+      color: var(--accent);
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 1px;
+    }
+
+    /* ─── ABOUT ──────────────────────────────────────────── */
+    .about-content {
+      max-width: var(--prose-width);
+      margin: 0 auto;
+      padding: 5rem 0 6rem;
+    }
+    .about-content h1 {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+    }
+    .about-content p {
+      font-family: var(--serif);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 1.5em;
+      color: var(--text);
+    }
+    .about-content p.lead {
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .about-beliefs {
+      margin: 3rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2rem 0;
+    }
+    .about-beliefs h3 {
+      font-family: var(--sans);
+      font-size: 0.722rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+    }
+    .about-beliefs ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .about-beliefs li {
+      font-family: var(--serif);
+      font-size: 0.972rem;
+      line-height: 1.55;
+      padding-left: 1.25rem;
+      position: relative;
+      color: var(--text);
+    }
+    .about-beliefs li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    /* ─── PROTOTYPE NAV (visible only in prototype) ───────── */
+    .proto-nav {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      border-radius: 100px;
+      padding: 0.6rem 1.25rem;
+      display: flex;
+      gap: 0.25rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      z-index: 100;
+    }
+    .proto-nav button {
+      font-family: var(--sans);
+      font-size: 0.722rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      padding: 0.35rem 0.75rem;
+      border-radius: 100px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .proto-nav button:hover { color: #fff; }
+    .proto-nav button.active {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+    .proto-label {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--accent);
+      color: rgba(255,255,255,0.9);
+      font-family: var(--sans);
+      font-size: 0.667rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0.4rem;
+      z-index: 200;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="proto-label">Protótipo visual — não é código de produção</div>
+
+  <!-- ─── NAV (shared) ───────────────────────────────────── -->
+  <nav style="margin-top: 24px;">
+    <div class="nav-inner">
+      <span class="nav-name" onclick="show('home')">João Marcos</span>
+      <ul class="nav-links">
+        <li><button onclick="show('writing')">Escrita</button></li>
+        <li><button onclick="show('about')">Sobre</button></li>
+        <li><a href="#">Contato</a></li>
+        <li class="lang-switch"><a href="#" onclick="toggleLang(); return false;" id="lang-toggle">EN</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ─── HOME ──────────────────────────────────────────── -->
+  <div id="page-home" class="page active">
+    <div class="page-content">
+      <div class="home-hero">
+        <h1>Penso sobre o que times de produto devem às pessoas que estão construindo.</h1>
+        <p>Sete anos em produto, dez em tech. A interseção entre decisão de produto e ética ainda parece ser tratada como nota de rodapé. Estou escrevendo sobre isso.</p>
+      </div>
+
+      <div class="home-divider"></div>
+
+      <div class="home-section-label">Escrita recente</div>
+      <ul class="home-writing-list">
+        <li>
+          <a href="#" onclick="show('essay'); return false;">
+            <span>Consentimento informado não é um modal de cookies</span>
+            <span class="item-meta">Ensaio · Jan 2025</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span>O que acontece quando produto trata acessibilidade como compliance</span>
+            <span class="item-meta">Ensaio · Nov 2024</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span>Decisão de produto como ato moral: um framework para o que ninguém quer ter a conversa</span>
+            <span class="item-meta">Case · Set 2024</span>
+          </a>
+        </li>
+      </ul>
+      <a href="#" class="home-see-all" onclick="show('writing'); return false;">Ver toda a escrita →</a>
+    </div>
+  </div>
+
+  <!-- ─── WRITING LIST ───────────────────────────────────── -->
+  <div id="page-writing" class="page">
+    <div class="page-content">
+      <div class="writing-header">
+        <h1>Escrita</h1>
+        <p>Ensaios e cases estruturados como argumentos, não documentação de processo. Os cases mostram julgamento, não método.</p>
+      </div>
+
+      <ul class="writing-list">
+        <li class="writing-list-item">
+          <a href="#" onclick="show('essay'); return false;">Consentimento informado não é um modal de cookies</a>
+          <div class="writing-meta">
+            <span class="tag essay">Ensaio</span>
+            <span class="writing-date">Jan 2025</span>
+          </div>
+        </li>
+        <li class="writing-list-item">
+          <a href="#">O que acontece quando produto trata acessibilidade como compliance</a>
+          <div class="writing-meta">
+            <span class="tag essay">Ensaio</span>
+            <span class="writing-date">Nov 2024</span>
+          </div>
+        </li>
+        <li class="writing-list-item">
+          <a href="#">Decisão de produto como ato moral</a>
+          <div class="writing-meta">
+            <span class="tag case">Case</span>
+            <span class="writing-date">Set 2024</span>
+          </div>
+        </li>
+        <li class="writing-list-item">
+          <a href="#">Velocidade como valor: o que "mova rápido" diz sobre uma cultura de produto</a>
+          <div class="writing-meta">
+            <span class="tag essay">Ensaio</span>
+            <span class="writing-date">Jul 2024</span>
+          </div>
+        </li>
+        <li class="writing-list-item">
+          <a href="#">Onboarding como consentimento: o que a maioria dos apps erra</a>
+          <div class="writing-meta">
+            <span class="tag essay">Ensaio</span>
+            <span class="writing-date">Mai 2024</span>
+          </div>
+        </li>
+        <li class="writing-list-item">
+          <a href="#">A métrica que salvamos era o problema</a>
+          <div class="writing-meta">
+            <span class="tag case">Case</span>
+            <span class="writing-date">Mar 2024</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── ESSAY ─────────────────────────────────────────── -->
+  <div id="page-essay" class="page">
+    <div class="page-content">
+      <div class="essay-header">
+        <div class="essay-type-label">Ensaio</div>
+        <h1>Consentimento informado não é um modal de cookies</h1>
+        <p class="essay-position">A maioria dos produtos digitais trata consentimento como barreira legal para contornar, não como compromisso com o usuário. Isso é um problema de produto, não jurídico.</p>
+        <div class="essay-meta-row">
+          <span>João Marcos</span>
+          <span class="sep">·</span>
+          <span>15 de janeiro de 2025</span>
+          <span class="sep">·</span>
+          <span>8 min de leitura</span>
+          <span class="sep">·</span>
+          <span class="tag lang-pt" style="margin:0;">PT</span>
+        </div>
+      </div>
+
+      <div class="essay-body">
+        <p>
+          Existe uma diferença entre compliance e integridade. Compliance é fazer o que você é obrigado a fazer. Integridade é fazer o que você deveria fazer independente de obrigação. A maioria dos times de produto que conheço passou os últimos anos otimizando para compliance, e chamando isso de experiência do usuário.
+        </p>
+        <p>
+          O GDPR foi implementado em 2018. Em oito anos, o que a maioria dos produtos aprendeu foi como esconder o botão "rejeitar tudo" atrás de três cliques. Isso não é design. É armadilha com documentação jurídica.
+        </p>
+
+        <div class="pull-quote">
+          "Consentimento que requer esforço para ser negado não é consentimento — é pressão com interface amigável."
+        </div>
+
+        <h2>O que consentimento informado realmente exige</h2>
+        <p>
+          Na medicina, consentimento informado tem critérios específicos: o paciente precisa entender o que está concordando, as alternativas disponíveis, e as consequências de cada escolha. Isso precisa ser comunicado de forma que o paciente possa de fato compreender, não apenas receber.
+        </p>
+        <p>
+          Produto digital nunca levou isso a sério. A versão de produto de "consentimento informado" é um texto de 3.000 palavras que ninguém vai ler seguido de um botão "Aceitar". O time jurídico assina embaixo. O time de produto segue em frente.
+        </p>
+
+        <h3>O problema estrutural</h3>
+        <p>
+          Quando o modelo de negócio depende de dados comportamentais, consentimento genuíno é adversarial ao negócio. Você não pode ao mesmo tempo maximizar opt-in e garantir que o usuário realmente entendeu o que está cedendo. Esses objetivos conflitam. A maioria dos times resolve esse conflito silenciosamente em favor do negócio e chama isso de "UX decision".
+        </p>
+        <p>
+          Isso é uma decisão de produto com consequência ética. Merece ser tratada como tal, não terceirizada para o time jurídico.
+        </p>
+      </div>
+
+      <div class="essay-footer">
+        <p>← <a href="#" onclick="show('writing'); return false;">Toda a escrita</a></p>
+        <p>Compartilhar: <a href="#">LinkedIn</a> · <a href="#">Copiar link</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── ABOUT ─────────────────────────────────────────── -->
+  <div id="page-about" class="page">
+    <div class="page-content">
+      <div class="about-content">
+        <h1>Sobre</h1>
+        <p class="lead">
+          Entrei em produto pelo caminho mais longo possível: passei quase três anos em engenharia antes de perceber que o problema que eu queria resolver era por que as coisas eram construídas, não como.
+        </p>
+        <p>
+          Nos sete anos desde, trabalhei em produtos que iam de zero a escala, em empresas que iam de dezoito pessoas a dezoito mil. O fio condutor não eram os setores ou as metodologias — era a mesma pergunta repetida em contextos diferentes: essa decisão serve a quem, exatamente?
+        </p>
+        <p>
+          Em algum ponto entre o primeiro produto que subi a produção e o décimo, ficou claro para mim que produto de tech tem um problema de honestidade consigo mesmo. A indústria adotou uma linguagem de impacto humano — "resolver problemas reais", "criar valor", "empoderar usuários" — e ao mesmo tempo construiu mecanismos de dark pattern, engagement baiting e exploração de vulnerabilidades cognitivas em escala industrial. E tratou isso como business as usual.
+        </p>
+
+        <div class="about-beliefs">
+          <h3>Algumas coisas em que acredito</h3>
+          <ul>
+            <li>Toda decisão de roadmap é também uma decisão sobre quem você está disposto a prejudicar por omissão.</li>
+            <li>Acessibilidade tratada como compliance é evidência de que o time nunca conheceu um usuário real com aquela necessidade.</li>
+            <li>Métrica de vaidade é sintoma. O problema é que o time não concordou com o que quer dizer ter sucesso.</li>
+            <li>O melhor PM que já trabalhei nunca usou a palavra "stakeholder" sem ironia.</li>
+          </ul>
+        </div>
+
+        <p>
+          Escrevo aqui porque pensar em voz alta me obriga a ter um argumento de verdade, não uma opinião genérica. E porque a conversa sobre ética em produto ainda é tratada como nichismo de acadêmico, quando devia ser parte do job description de qualquer pessoa que toma decisão de produto.
+        </p>
+        <p>
+          Se você quiser conversar, <a href="#">manda um email</a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── PROTOTYPE NAVIGATION ──────────────────────────── -->
+  <div class="proto-nav">
+    <button id="btn-home"    onclick="show('home')"    class="active">Home</button>
+    <button id="btn-writing" onclick="show('writing')">Escrita</button>
+    <button id="btn-essay"   onclick="show('essay')">Artigo</button>
+    <button id="btn-about"   onclick="show('about')">Sobre</button>
+  </div>
+
+  <script>
+    let currentLang = 'pt';
+
+    const translations = {
+      pt: {
+        name: 'João Marcos',
+        nav: ['Escrita', 'Sobre', 'Contato'],
+        langToggle: 'EN',
+        writingTitle: 'Escrita',
+        writingDesc: 'Ensaios e cases estruturados como argumentos, não documentação de processo. Os cases mostram julgamento, não método.',
+        seeAll: 'Ver toda a escrita →',
+        essayLabel: 'Ensaio',
+      },
+      en: {
+        name: 'João Marcos',
+        nav: ['Writing', 'About', 'Contact'],
+        langToggle: 'PT',
+        writingTitle: 'Writing',
+        writingDesc: 'Essays and cases structured as arguments, not process documentation. The cases show judgment, not method.',
+        seeAll: 'See all writing →',
+        essayLabel: 'Essay',
+      }
+    };
+
+    function show(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.proto-nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById('page-' + page).classList.add('active');
+      document.getElementById('btn-' + page).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'pt' ? 'en' : 'pt';
+      const t = translations[currentLang];
+      document.getElementById('lang-toggle').textContent = t.langToggle;
+      // Show feedback
+      const label = document.querySelector('.proto-label');
+      label.textContent = currentLang === 'en'
+        ? 'Prototype — English version (same design, translated content)'
+        : 'Protótipo visual — não é código de produção';
+    }
+  </script>
+</body>
+</html>

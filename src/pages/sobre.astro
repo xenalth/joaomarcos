@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+---
+
+<BaseLayout title="Sobre" lang="pt" description="Head de Produto com background técnico. Sete anos em produto, dez em tech.">
+  <div class="page-shell">
+    <article class="about-content">
+      <h1>Sobre</h1>
+
+      <p class="lead">
+        Entrei em tecnologia há 15 anos. Passei os oito primeiros como dev, em projetos que iam de startups pequenas a operações de grande escala no mercado financeiro. Sempre fui mais curioso com o problema do que com a solução. Em algum momento isso ficou insuportável de ignorar e eu migrei pra produto.
+      </p>
+
+      <p>
+        Nos sete anos desde, trabalhei em banking e varejo, em empresas de tamanhos bem diferentes. O setor mudava, a metodologia mudava, o tamanho do time mudava. A pergunta que não saía era sempre a mesma: essa decisão serve a quem, exatamente?
+      </p>
+
+      <p>
+        Em algum ponto dessa jornada, vivi situações que me incomodaram mais do que deveriam. Momentos em que o produto dizia uma coisa pro usuário com a intenção de fazer outra. Em que a comunicação era desenhada pra conduzir, não pra informar. A indústria tem nome bonito pra isso, fala em otimização de conversão, em experiência guiada. Na prática, é falta de transparência com quem confia no que você construiu. E isso virou uma linha que eu não consigo mais ignorar.
+      </p>
+
+      <div class="beliefs">
+        <h3>Algumas coisas em que acredito</h3>
+        <ul>
+          <li>Toda decisão de roadmap deixa alguém de fora. A pergunta é se o time foi honesto sobre quem.</li>
+          <li>Quando produto vira ponte só no papel, engenharia otimiza o que é possível, design otimiza o que é desejável e ninguém otimiza o que é necessário.</li>
+          <li>Quando o time discute métrica de sucesso só depois de lançar, a discussão já chegou tarde.</li>
+          <li>Cases que lideram com percentuais sem contexto de negócio estão mostrando números, não raciocínio.</li>
+        </ul>
+      </div>
+
+      <p>
+        Escrevo aqui porque pensar em voz alta me obriga a ter um argumento de verdade. E porque a conversa sobre ética em produto ainda é tratada como nichismo de acadêmico, quando devia ser parte do job description de qualquer pessoa que toma decisão de produto.
+      </p>
+
+      <p>
+        Se você quiser conversar, <a href="/contato">manda um email</a> ou me encontra no <a href="https://linkedin.com/in/joaomarcos" target="_blank" rel="noopener">LinkedIn</a>.
+      </p>
+    </article>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-content {
+    max-width: var(--prose-width);
+    margin: 0 auto;
+    padding: var(--space-16) 0 var(--space-24);
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: var(--leading-prose);
+  }
+  h1 {
+    font-family: var(--font-serif);
+    font-size: var(--text-3xl);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-12);
+  }
+  p {
+    margin-bottom: 1.5em;
+    color: var(--color-text);
+  }
+  .lead {
+    font-size: var(--text-lg);
+    line-height: 1.7;
+  }
+  a {
+    color: var(--color-accent);
+    border-bottom: 1px solid #B8D4C8;
+  }
+  a:hover {
+    color: var(--color-accent-hover);
+    border-color: var(--color-accent);
+  }
+
+  .beliefs {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-8) 0;
+    margin: var(--space-12) 0;
+  }
+  h3 {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-6);
+  }
+  ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  li {
+    padding-left: var(--space-6);
+    position: relative;
+    color: var(--color-text);
+    line-height: 1.6;
+  }
+  li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+  }
+</style>
