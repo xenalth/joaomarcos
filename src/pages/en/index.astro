@@ -2,6 +2,7 @@
 import BaseLayout from '../../components/layout/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const allPosts = await getCollection('writing-en', ({ data }) => !data.draft);
 const recent = allPosts
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -21,7 +22,7 @@ const recent = allPosts
         <ul class="home-list">
           {recent.map((post) => (
             <li>
-              <a href={`/en/writing/${post.id}`}>
+              <a href={`${base}/en/writing/${post.id}`}>
                 <span>{post.data.title}</span>
                 <span class="item-meta">
                   {post.data.type === 'essay' ? 'Essay' : 'Case'} ·{' '}
@@ -31,7 +32,7 @@ const recent = allPosts
             </li>
           ))}
         </ul>
-        <a href="/en/writing" class="see-all">See all writing →</a>
+        <a href={`${base}/en/writing`} class="see-all">See all writing →</a>
       </section>
     )}
   </div>

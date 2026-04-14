@@ -17,7 +17,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogDescription = description || (lang === 'pt'
   ? 'Pensamento em público sobre produto e ética.'
   : 'Thinking in public about product and ethics.');
-const feedHref = lang === 'pt' ? '/feed.xml' : '/en/feed.xml';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const feedHref = lang === 'pt' ? `${base}/feed.xml` : `${base}/en/feed.xml`;
 ---
 
 <!doctype html>
@@ -43,10 +44,10 @@ const feedHref = lang === 'pt' ? '/feed.xml' : '/en/feed.xml';
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={ogDescription} />
 
-    <link rel="alternate" hreflang="pt" href={Astro.site} />
-    <link rel="alternate" hreflang="en" href={`${Astro.site}en`} />
+    <link rel="alternate" hreflang="pt" href={`${Astro.site}${base.replace(/^\//, '')}/`} />
+    <link rel="alternate" hreflang="en" href={`${Astro.site}${base.replace(/^\//, '')}/en`} />
     <link rel="alternate" type="application/rss+xml" title={`${siteName} — RSS`} href={feedHref} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
   </head>
   <body>
     <Nav lang={lang} slug={slug} />

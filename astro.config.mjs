@@ -4,7 +4,8 @@ import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://xenalth.github.io/joaomarcos/',
+  site: 'https://xenalth.github.io',
+  base: '/joaomarcos',
   integrations: [mdx()],
   i18n: {
     defaultLocale: 'pt',

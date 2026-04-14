@@ -6,10 +6,11 @@ interface Props {
 }
 
 const { lang, slug } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const links = {
-  pt: { writing: '/escrita', about: '/sobre', contact: '/contato', writingLabel: 'Escrita', aboutLabel: 'Sobre', contactLabel: 'Contato', altLang: 'EN', altHref: slug ? `/en/writing/${slug}` : '/en' },
-  en: { writing: '/en/writing', about: '/en/about', contact: '/en/contact', writingLabel: 'Writing', aboutLabel: 'About', contactLabel: 'Contact', altLang: 'PT', altHref: slug ? `/escrita/${slug}` : '/' },
+  pt: { writing: `${base}/escrita`, about: `${base}/sobre`, contact: `${base}/contato`, writingLabel: 'Escrita', aboutLabel: 'Sobre', contactLabel: 'Contato', altLang: 'EN', altHref: slug ? `${base}/en/writing/${slug}` : `${base}/en` },
+  en: { writing: `${base}/en/writing`, about: `${base}/en/about`, contact: `${base}/en/contact`, writingLabel: 'Writing', aboutLabel: 'About', contactLabel: 'Contact', altLang: 'PT', altHref: slug ? `${base}/escrita/${slug}` : `${base}/` },
 };
 
 const t = links[lang];
@@ -17,7 +18,7 @@ const t = links[lang];
 
 <nav>
   <div class="nav-inner page-shell">
-    <a href={lang === 'pt' ? '/' : '/en'} class="nav-name">João Marcos</a>
+    <a href={lang === 'pt' ? `${base}/` : `${base}/en`} class="nav-name">João Marcos</a>
     <ul class="nav-links">
       <li><a href={t.writing}>{t.writingLabel}</a></li>
       <li><a href={t.about}>{t.aboutLabel}</a></li>

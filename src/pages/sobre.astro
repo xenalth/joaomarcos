@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../components/layout/BaseLayout.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout title="Sobre" lang="pt" description="Head de Produto com background técnico. Sete anos em produto, dez em tech.">
@@ -34,7 +35,7 @@ import BaseLayout from '../components/layout/BaseLayout.astro';
       </p>
 
       <p>
-        Se você quiser conversar, <a href="/contato">manda um email</a> ou me encontra no <a href="https://linkedin.com/in/joaomarcos" target="_blank" rel="noopener">LinkedIn</a>.
+        Se você quiser conversar, <a href={`${base}/contato`}>manda um email</a> ou me encontra no <a href="https://linkedin.com/in/joaomarcos" target="_blank" rel="noopener">LinkedIn</a>.
       </p>
     </article>
   </div>

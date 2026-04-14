@@ -18,7 +18,8 @@ const typeLabel = {
   en: { essay: 'Essay', case: 'Case' },
 }[lang];
 
-const basePath = lang === 'pt' ? '/escrita' : '/en/writing';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const basePath = lang === 'pt' ? `${base}/escrita` : `${base}/en/writing`;
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
