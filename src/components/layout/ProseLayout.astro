@@ -30,7 +30,7 @@ const backLabel = lang === 'pt' ? '← Toda a escrita' : '← All writing';
 const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
 ---
 
-<BaseLayout {title} {description} {lang} {slug}>
+<BaseLayout {title} description={description || position} {lang} {slug} ogType="article" publishedDate={date}>
   <div class="page-shell">
     <article>
       <header class="essay-header">
