@@ -5,32 +5,31 @@ position: "A maioria dos produtos digitais trata consentimento como barreira leg
 type: essay
 originalLang: pt
 draft: false
+impactScore: 3
 ---
 
 import PullQuote from '../../components/writing/PullQuote.astro';
 
-Existe uma diferença entre compliance e integridade. Compliance é fazer o que você é obrigado a fazer. Integridade é fazer o que você deveria fazer independente de obrigação. A maioria dos times de produto que conheço passou os últimos anos otimizando para compliance, e chamando isso de experiência do usuário.
+Semanas atrás tentei recusar os cookies de um site. Levei mais de um minuto para achar o botão.
 
-O GDPR foi implementado em 2018. Em oito anos, o que a maioria dos produtos aprendeu foi como esconder o botão "rejeitar tudo" atrás de três cliques. Isso não é design. É armadilha com documentação jurídica.
+Não estava escondido por bug. Tinha um banner ocupando metade da tela, dois botões grandes em azul: "Aceitar tudo" e "Personalizar". E um link em cinza claro, fonte menor, quase invisível no fundo branco: "Recusar não essenciais". Exigiu esforço deliberado para encontrar. Isso me pareceu estranho.
 
-<PullQuote>
-  "Consentimento que requer esforço para ser negado não é consentimento — é pressão com interface amigável."
-</PullQuote>
+Fui olhar mais de perto. Do ponto de vista legal, aquilo estava correto. A LGPD não exige que os botões tenham o mesmo tamanho ou a mesma cor. Exige que o usuário tenha a opção. A opção estava lá.
 
-## O que consentimento informado realmente exige
+Mas aquilo não era consentimento. Era um produto cujo sucesso dependia de você não exercer seu direito.
 
-Na medicina, consentimento informado tem critérios específicos: o paciente precisa entender o que está concordando, as alternativas disponíveis, e as consequências de cada escolha. Isso precisa ser comunicado de forma que o paciente possa de fato compreender, não apenas receber.
+Aí veio a curiosidade: por que aceitamos que "ter a opção" seja suficiente? Na medicina, consentimento informado tem critérios bem definidos. O paciente precisa entender o que está concordando, as alternativas disponíveis, as consequências de cada escolha. Não apenas receber a informação. Compreender. São coisas diferentes.
 
 Produto digital nunca levou isso a sério. A versão de produto de "consentimento informado" é um texto de 3.000 palavras que ninguém vai ler seguido de um botão "Aceitar". O time jurídico assina embaixo. O time de produto segue em frente.
 
-### O problema estrutural
+<PullQuote>
+  "Consentimento que requer esforço para ser negado não é consentimento. É pressão com interface amigável."
+</PullQuote>
 
-Quando o modelo de negócio depende de dados comportamentais, consentimento genuíno é adversarial ao negócio. Você não pode ao mesmo tempo maximizar opt-in e garantir que o usuário realmente entendeu o que está cedendo. Esses objetivos conflitam. A maioria dos times resolve esse conflito silenciosamente em favor do negócio e chama isso de "UX decision".
+O problema não é que os times de produto são mal-intencionados. É que quando o modelo de negócio depende de dados comportamentais, consentimento genuíno é adversarial ao negócio. Você não pode ao mesmo tempo maximizar opt-in e garantir que o usuário realmente entendeu o que está cedendo. Esses objetivos conflitam.
 
-Isso é uma decisão de produto com consequência ética. Merece ser tratada como tal, não terceirizada para o time jurídico.
+A maioria dos times resolve esse conflito silenciosamente em favor do negócio e chama isso de "UX decision".
 
-## O que fazer diferente
+Isso é uma decisão com consequência ética. Merece ser tratada como tal.
 
-Não estou argumentando que toda empresa deveria implementar um processo de consentimento que reduz opt-in. Estou argumentando que o trade-off precisa ser nomeado explicitamente internamente — e que times de produto que nunca tiveram essa conversa estão tomando uma decisão ética sem perceber que estão tomando uma.
-
-A pergunta que precisa ser feita no momento do design não é "como fazemos isso ser aceito?". É "o usuário que vai aceitar isso vai entender o que está aceitando?". Se a resposta for não, você tem um problema de produto, não de copywriting.
+Não sei se existe saída limpa aqui. Talvez não. Mas acho que começa por nomear o trade-off internamente, em vez de terceirizar para o jurídico e seguir em frente. Times que nunca tiveram essa conversa estão tomando uma decisão ética sem perceber que estão tomando uma.
