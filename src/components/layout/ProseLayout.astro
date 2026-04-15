@@ -20,8 +20,9 @@ const typeLabel = {
   en: { essay: 'Essay', case: 'Case' },
 }[lang][type];
 
+const dateISO = date.toISOString().slice(0, 10);
 const dateStr = date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
-  year: 'numeric', month: 'long', day: 'numeric',
+  year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
 });
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -42,7 +43,7 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
         {subtitle && <p class="subtitle">{subtitle}</p>}
         {position && <p class="position">{position}</p>}
         <div class="meta-row">
-          <time datetime={date.toISOString()}>{dateStr}</time>
+          <time datetime={dateISO} data-date={dateISO} data-date-format="long">{dateStr}</time>
           <span class="sep">·</span>
           <span>{readingTime}</span>
         </div>
@@ -522,9 +523,6 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
   .share-desktop-item:focus-visible {
     outline: 2px solid rgba(43, 76, 63, 0.35);
     outline-offset: 1px;
-  }
-  .share-desktop-item[href] {
-    display: block;
   }
   .share-desktop-item[href]:hover {
     color: var(--color-accent-hover);

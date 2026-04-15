@@ -29,7 +29,11 @@ const recent = allPosts
                   <span class={`tag tag--${post.data.type}`}>
                     {post.data.type === 'essay' ? 'Essay' : 'Case'}
                   </span>
-                  <time>{post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</time>
+                  <time
+                    datetime={post.data.date.toISOString().slice(0, 10)}
+                    data-date={post.data.date.toISOString().slice(0, 10)}
+                    data-date-format="short"
+                  >{post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })}</time>
                 </span>
               </a>
             </li>

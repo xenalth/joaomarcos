@@ -23,8 +23,12 @@ const basePath = lang === 'pt' ? `${base}/escrita` : `${base}/en/writing`;
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString(lang === 'pt' ? 'pt-BR' : 'en-US', {
-    month: 'short', year: 'numeric',
+    month: 'short', year: 'numeric', timeZone: 'UTC',
   });
+}
+
+function dateISO(date: Date): string {
+  return date.toISOString().slice(0, 10);
 }
 ---
 
@@ -34,7 +38,7 @@ function formatDate(date: Date): string {
       <a href={`${basePath}/${item.slug}`}>{item.title}</a>
       <div class="item-meta">
         <span class={`tag tag--${item.type}`}>{typeLabel[item.type]}</span>
-        <time datetime={item.date.toISOString()}>{formatDate(item.date)}</time>
+        <time datetime={dateISO(item.date)} data-date={dateISO(item.date)} data-date-format="short">{formatDate(item.date)}</time>
       </div>
     </li>
   ))}

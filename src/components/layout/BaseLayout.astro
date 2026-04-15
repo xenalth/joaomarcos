@@ -120,6 +120,26 @@ const articleSchema = ogType === 'article' && publishedDate
       </>
     )}
     <script is:inline>
+      // Date hydration — renders dates in reader's local timezone.
+      // Uses T12:00:00 (local noon) so any timezone offset (UTC±12) stays on the correct calendar day.
+      (function () {
+        var lang = document.documentElement.lang || 'pt';
+        var locale = lang === 'en' ? 'en-US' : 'pt-BR';
+        var els = document.querySelectorAll('time[data-date]');
+        for (var i = 0; i < els.length; i++) {
+          var el = els[i];
+          var d = el.getAttribute('data-date');
+          if (!d) continue;
+          var date = new Date(d + 'T12:00:00');
+          var fmt = el.getAttribute('data-date-format') || 'short';
+          var options = fmt === 'long'
+            ? { year: 'numeric', month: 'long', day: 'numeric' }
+            : { month: 'short', year: 'numeric' };
+          el.textContent = date.toLocaleDateString(locale, options);
+        }
+      })();
+    </script>
+    <script is:inline>
       window.jmTrackEvent = function(name, params) {
         if (typeof window.gtag === 'function') {
           var baseParams = {
