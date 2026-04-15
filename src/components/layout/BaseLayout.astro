@@ -27,6 +27,11 @@ const shouldLoadAnalytics = import.meta.env.PROD && Boolean(gaMeasurementId);
 const siteURL = new URL(base || '/', Astro.site).toString();
 const locale = lang === 'pt' ? 'pt-BR' : 'en-US';
 
+// og:image — generated per-article from the OG image endpoint; falls back to null for non-article pages
+const ogImage = slug
+  ? new URL(lang === 'pt' ? `${base}/og/${slug}.png` : `${base}/en/og/${slug}.png`, Astro.site).toString()
+  : null;
+
 // hreflang: article pages use slug to build per-article URLs; other pages fall back to section roots
 const ptHref = slug
   ? new URL(`${base}/escrita/${slug}`, Astro.site)
@@ -95,13 +100,18 @@ const articleSchema = ogType === 'article' && publishedDate
     <meta property="og:site_name" content={siteName} />
     <meta property="og:locale" content={lang === 'pt' ? 'pt_BR' : 'en_US'} />
     <meta property="og:type" content={ogType} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    {ogImage && <meta property="og:image:type" content="image/png" />}
     {publishedDate && <meta property="article:published_time" content={publishedDate.toISOString()} />}
     {ogType === 'article' && <meta property="article:author" content={siteName} />}
 
     <!-- Twitter / LinkedIn -->
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={ogDescription} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     <link rel="alternate" hreflang="pt" href={ptHref} />
     <link rel="alternate" hreflang="en" href={enHref} />
