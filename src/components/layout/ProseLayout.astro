@@ -29,6 +29,8 @@ const backHref = lang === 'pt' ? `${base}/escrita` : `${base}/en/writing`;
 const backLabel = lang === 'pt' ? '← Toda a escrita' : '← All writing';
 const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
 const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
+const shareCopyLabel = lang === 'pt' ? 'Copiar link' : 'Copy link';
+const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
 ---
 
 <BaseLayout {title} description={description || position} {lang} {slug} ogType="article" publishedDate={date}>
@@ -52,19 +54,66 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
 
       <footer class="essay-footer">
         <a href={backHref} data-track-article-back data-article-slug={slug} data-article-lang={lang}>{backLabel}</a>
-        <span class="share-hint share-desktop" data-share-desktop>{shareLabel}: <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener" data-track-share-linkedin data-article-slug={slug} data-article-lang={lang}>LinkedIn</a></span>
+        <div class="share-desktop" data-share-desktop>
+          <button
+            type="button"
+            class="share-desktop-trigger"
+            data-share-desktop-trigger
+            aria-expanded="false"
+          >
+            {shareLabel}
+          </button>
+          <div class="share-desktop-menu" data-share-desktop-menu hidden>
+            <button
+              type="button"
+              class="share-desktop-item"
+              data-share-copy-link
+              data-share-url={Astro.url.href}
+              data-label-default={shareCopyLabel}
+              data-label-success={shareCopySuccessLabel}
+              data-article-slug={slug}
+              data-article-lang={lang}
+            >
+              <span class="share-desktop-item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="14" height="14" focusable="false">
+                  <path d="M9 9h10v12H9z" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  <path d="M5 3h10v12H5z" fill="none" stroke="currentColor" stroke-width="1.6" />
+                </svg>
+              </span>
+              <span>{shareCopyLabel}</span>
+            </button>
+            <a
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
+              target="_blank"
+              rel="noopener"
+              class="share-desktop-item"
+              data-track-share-linkedin
+              data-article-slug={slug}
+              data-article-lang={lang}
+            >
+              <span class="share-desktop-item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="14" height="14" focusable="false">
+                  <path d="M6.3 8.4h3.2V19H6.3zM8 3.8a1.9 1.9 0 110 3.8 1.9 1.9 0 010-3.8zM12 8.4h3.1v1.5h.1c.4-.8 1.6-1.8 3.3-1.8 3.5 0 4.2 2.2 4.2 5.2V19h-3.2v-4.7c0-1.1 0-2.6-1.7-2.6s-1.9 1.2-1.9 2.5V19H12z" fill="currentColor"/>
+                </svg>
+              </span>
+              <span>LinkedIn</span>
+            </a>
+          </div>
+        </div>
         <button
           type="button"
           class="share-native"
           data-share-native
           data-share-url={Astro.url.href}
           data-share-title={title}
+          data-copy-success-label={shareCopySuccessLabel}
           data-article-slug={slug}
           data-article-lang={lang}
           hidden
         >
           {shareNativeLabel}
         </button>
+        <span class="share-toast" data-share-toast hidden aria-live="polite"></span>
       </footer>
     </article>
   </div>
@@ -78,6 +127,45 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
   };
 
   const mobileQuery = window.matchMedia('(max-width: 760px)');
+  const toastTimers = new WeakMap();
+
+  const showShareToast = (container, text) => {
+    const toast = container?.querySelector('[data-share-toast]');
+    if (!toast) {
+      return;
+    }
+
+    toast.textContent = text;
+    toast.hidden = false;
+    toast.classList.add('is-visible');
+
+    const existingTimer = toastTimers.get(toast);
+    if (existingTimer) {
+      clearTimeout(existingTimer);
+    }
+
+    const timerId = setTimeout(() => {
+      toast.classList.remove('is-visible');
+      setTimeout(() => {
+        toast.hidden = true;
+      }, 140);
+    }, 1600);
+
+    toastTimers.set(toast, timerId);
+  };
+
+  const closeDesktopMenus = () => {
+    const menus = document.querySelectorAll('[data-share-desktop-menu]');
+
+    for (const menu of menus) {
+      menu.hidden = true;
+      const container = menu.closest('[data-share-desktop]');
+      const trigger = container?.querySelector('[data-share-desktop-trigger]');
+      if (trigger) {
+        trigger.setAttribute('aria-expanded', 'false');
+      }
+    }
+  };
 
   const syncShareUI = () => {
     const footers = document.querySelectorAll('.essay-footer');
@@ -93,6 +181,10 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
         nativeShare.hidden = !mobileQuery.matches;
       }
     }
+
+    if (mobileQuery.matches) {
+      closeDesktopMenus();
+    }
   };
 
   syncShareUI();
@@ -100,6 +192,89 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
     mobileQuery.addEventListener('change', syncShareUI);
   } else if (mobileQuery.addListener) {
     mobileQuery.addListener(syncShareUI);
+  }
+
+  const desktopTriggers = document.querySelectorAll('[data-share-desktop-trigger]');
+
+  for (const trigger of desktopTriggers) {
+    trigger.addEventListener('click', (event) => {
+      event.stopPropagation();
+
+      const container = trigger.closest('[data-share-desktop]');
+      const menu = container?.querySelector('[data-share-desktop-menu]');
+      if (!menu) {
+        return;
+      }
+
+      const willOpen = menu.hidden;
+      closeDesktopMenus();
+      menu.hidden = !willOpen;
+      trigger.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+
+      if (willOpen) {
+        const articleSlug = container?.querySelector('[data-article-slug]')?.getAttribute('data-article-slug') || '';
+        const articleLang = container?.querySelector('[data-article-lang]')?.getAttribute('data-article-lang') || '';
+
+        trackEvent('article_share_desktop_open', {
+          article_slug: articleSlug,
+          article_lang: articleLang,
+          location: 'article_footer',
+          share_channel: 'desktop',
+        });
+      }
+    });
+  }
+
+  document.addEventListener('click', () => {
+    closeDesktopMenus();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeDesktopMenus();
+    }
+  });
+
+  const copyButtons = document.querySelectorAll('[data-share-copy-link]');
+
+  for (const button of copyButtons) {
+    button.addEventListener('click', async (event) => {
+      event.stopPropagation();
+
+      const shareUrl = button.getAttribute('data-share-url') || window.location.href;
+      const articleSlug = button.getAttribute('data-article-slug') || '';
+      const articleLang = button.getAttribute('data-article-lang') || '';
+      const labelDefault = button.getAttribute('data-label-default') || button.textContent || '';
+      const labelSuccess = button.getAttribute('data-label-success') || labelDefault;
+      const shareContainer = button.closest('[data-share-desktop]');
+      const footer = button.closest('.essay-footer');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+          button.textContent = labelSuccess;
+          showShareToast(footer, labelSuccess);
+          trackEvent('article_share_copy_link', {
+            article_slug: articleSlug,
+            article_lang: articleLang,
+            location: 'article_footer',
+            share_channel: 'desktop',
+          });
+          setTimeout(() => {
+            button.textContent = labelDefault;
+          }, 1800);
+          closeDesktopMenus();
+          return;
+        } catch {
+          trackEvent('article_share_copy_link_error', {
+            article_slug: articleSlug,
+            article_lang: articleLang,
+            location: 'article_footer',
+            share_channel: 'desktop',
+          });
+        }
+      }
+    });
   }
 
   const shareButtons = document.querySelectorAll('[data-share-native]');
@@ -115,6 +290,7 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
         article_slug: articleSlug,
         article_lang: articleLang,
         location: 'article_footer',
+        share_channel: 'native',
       });
 
       if (navigator.share) {
@@ -127,6 +303,7 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
             article_slug: articleSlug,
             article_lang: articleLang,
             location: 'article_footer',
+            share_channel: 'native',
           });
           return;
         } catch (error) {
@@ -135,6 +312,7 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
               article_slug: articleSlug,
               article_lang: articleLang,
               location: 'article_footer',
+              share_channel: 'native',
             });
             return;
           }
@@ -143,10 +321,14 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         await navigator.clipboard.writeText(shareUrl);
+        const footer = button.closest('.essay-footer');
+        const copySuccessLabel = button.getAttribute('data-copy-success-label') || (document.documentElement.lang === 'pt' ? 'Link copiado' : 'Link copied');
+        showShareToast(footer, copySuccessLabel);
         trackEvent('article_share_copy_link', {
           article_slug: articleSlug,
           article_lang: articleLang,
           location: 'article_footer',
+          share_channel: 'native',
         });
       }
     });
@@ -178,6 +360,7 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
         article_slug: articleSlug,
         article_lang: articleLang,
         location: 'article_footer',
+        share_channel: 'desktop',
       });
     });
   }
@@ -243,7 +426,7 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
     font-size: var(--text-base);
   }
   .essay-footer > a,
-  .essay-footer > .share-hint,
+  .essay-footer > .share-desktop,
   .essay-footer > .share-native {
     flex: 1;
     font-family: var(--font-sans);
@@ -259,12 +442,108 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
     text-decoration-thickness: var(--link-underline-thickness);
     text-underline-offset: var(--link-underline-offset);
   }
-  .share-hint {
+  .share-desktop {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+  }
+  .share-desktop-trigger {
+    color: var(--color-accent);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
+    transition: color 0.15s ease;
+  }
+  .share-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 1.5rem;
+    transform: translate(-50%, 0.4rem);
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    color: var(--color-text);
+    background: color-mix(in srgb, var(--color-bg) 92%, #ffffff 8%);
+    border: 1px solid var(--color-border);
+    padding: 0.42rem 0.7rem;
+    border-radius: 2px;
+    box-shadow: 0 6px 16px rgba(26, 26, 26, 0.08);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.14s ease, transform 0.14s ease;
+    z-index: 60;
+  }
+  .share-toast.is-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  .share-desktop-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 11rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 6px 20px rgba(26, 26, 26, 0.08);
+    padding: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    z-index: 20;
+  }
+  .share-desktop-item {
+    color: var(--color-accent);
+    background: none;
+    border: 0;
+    padding: 0.45rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .share-desktop-item-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 0.95rem;
+    height: 0.95rem;
     color: var(--color-text-subtle);
+    flex-shrink: 0;
+  }
+  .share-desktop-item:hover {
+    background: rgba(43, 76, 63, 0.06);
+  }
+  .share-desktop-item:focus-visible {
+    outline: 2px solid rgba(43, 76, 63, 0.35);
+    outline-offset: 1px;
+  }
+  .share-desktop-item[href] {
+    display: block;
+  }
+  .share-desktop-item[href]:hover {
+    color: var(--color-accent-hover);
+  }
+  .share-desktop[hidden] {
+    display: none;
+  }
+  .share-native[hidden] {
+    display: none;
+  }
+  .share-native:not([hidden]) {
+    display: inline-flex;
     text-align: right;
   }
   .share-native {
-    display: inline-flex;
     justify-content: flex-end;
     color: var(--color-accent);
     background: none;
@@ -297,16 +576,19 @@ const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
       gap: var(--space-4);
     }
     .essay-footer > a,
-    .essay-footer > .share-hint,
+    .essay-footer > .share-desktop,
     .essay-footer > .share-native {
       width: auto;
       flex: 1;
     }
-    .share-native {
+    .share-desktop {
       justify-content: flex-end;
     }
-    .share-hint {
-      text-align: left;
+    .share-desktop-menu {
+      right: 0;
+    }
+    .share-native {
+      justify-content: flex-end;
     }
   }
 </style>
