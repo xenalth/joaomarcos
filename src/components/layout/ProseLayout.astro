@@ -80,7 +80,7 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
                   <path d="M5 3h10v12H5z" fill="none" stroke="currentColor" stroke-width="1.6" />
                 </svg>
               </span>
-              <span>{shareCopyLabel}</span>
+              <span data-share-copy-link-label>{shareCopyLabel}</span>
             </button>
             <a
               href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
@@ -244,7 +244,8 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
       const shareUrl = button.getAttribute('data-share-url') || window.location.href;
       const articleSlug = button.getAttribute('data-article-slug') || '';
       const articleLang = button.getAttribute('data-article-lang') || '';
-      const labelDefault = button.getAttribute('data-label-default') || button.textContent || '';
+      const labelNode = button.querySelector('[data-share-copy-link-label]');
+      const labelDefault = button.getAttribute('data-label-default') || labelNode?.textContent || '';
       const labelSuccess = button.getAttribute('data-label-success') || labelDefault;
       const shareContainer = button.closest('[data-share-desktop]');
       const footer = button.closest('.essay-footer');
@@ -252,7 +253,9 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         try {
           await navigator.clipboard.writeText(shareUrl);
-          button.textContent = labelSuccess;
+          if (labelNode) {
+            labelNode.textContent = labelSuccess;
+          }
           showShareToast(footer, labelSuccess);
           trackEvent('article_share_copy_link', {
             article_slug: articleSlug,
@@ -261,7 +264,9 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
             share_channel: 'desktop',
           });
           setTimeout(() => {
-            button.textContent = labelDefault;
+            if (labelNode) {
+              labelNode.textContent = labelDefault;
+            }
           }, 1800);
           closeDesktopMenus();
           return;
