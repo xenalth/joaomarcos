@@ -81,7 +81,7 @@ export async function generateOgImage({ title, subtitle, type, lang }: OgImageOp
     h('div', {
       style: {
         display: 'flex',
-        fontSize: title.length > 50 ? '46px' : '56px',
+        fontSize: title.length > 50 ? '51px' : '62px',
         fontFamily: 'Lora',
         fontWeight: 500,
         lineHeight: 1.2,
@@ -91,18 +91,25 @@ export async function generateOgImage({ title, subtitle, type, lang }: OgImageOp
       },
     }, title),
 
-    // Subtitle (optional) — smaller font for longer strings (position field)
+    // Subtitle (optional) — styled as position block with accent border
     ...(subtitle ? [h('div', {
       style: {
         display: 'flex',
-        fontSize: subtitle.length > 80 ? '18px' : '22px',
+        borderLeft: '3px solid #2B4C3F',
+        paddingLeft: '20px',
+        marginTop: '8px',
+      },
+    }, h('div', {
+      style: {
+        display: 'flex',
+        fontSize: subtitle.length > 80 ? '23px' : '28px',
         fontFamily: 'Lora',
         fontWeight: 400,
         fontStyle: 'italic',
         color: '#76706A',
-        lineHeight: 1.5,
+        lineHeight: 1.6,
       },
-    }, subtitle)] : []),
+    }, subtitle))] : []),
 
     // Spacer
     h('div', { style: { display: 'flex', flex: 1 } }),

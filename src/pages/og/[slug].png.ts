@@ -17,7 +17,7 @@ export const GET: APIRoute = async ({ params }) => {
 
   const png = await generateOgImage({
     title: post.data.title,
-    subtitle: post.data.subtitle ?? post.data.position,
+    subtitle: post.data.position ?? post.data.subtitle,
     type: post.data.type,
     lang: 'pt',
   });
