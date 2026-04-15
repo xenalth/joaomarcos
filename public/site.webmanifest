@@ -1,0 +1,20 @@
+{
+  "name": "João Marcos",
+  "short_name": "João",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F9F7F4",
+  "theme_color": "#F9F7F4",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

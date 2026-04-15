@@ -244,8 +244,7 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
       const shareUrl = button.getAttribute('data-share-url') || window.location.href;
       const articleSlug = button.getAttribute('data-article-slug') || '';
       const articleLang = button.getAttribute('data-article-lang') || '';
-      const labelNode = button.querySelector('[data-share-copy-link-label]');
-      const labelDefault = button.getAttribute('data-label-default') || labelNode?.textContent || '';
+      const labelDefault = button.getAttribute('data-label-default') || '';
       const labelSuccess = button.getAttribute('data-label-success') || labelDefault;
       const shareContainer = button.closest('[data-share-desktop]');
       const footer = button.closest('.essay-footer');
@@ -253,9 +252,6 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
       if (navigator.clipboard && navigator.clipboard.writeText) {
         try {
           await navigator.clipboard.writeText(shareUrl);
-          if (labelNode) {
-            labelNode.textContent = labelSuccess;
-          }
           showShareToast(footer, labelSuccess);
           trackEvent('article_share_copy_link', {
             article_slug: articleSlug,
@@ -263,11 +259,6 @@ const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
             location: 'article_footer',
             share_channel: 'desktop',
           });
-          setTimeout(() => {
-            if (labelNode) {
-              labelNode.textContent = labelDefault;
-            }
-          }, 1800);
           closeDesktopMenus();
           return;
         } catch {

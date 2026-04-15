@@ -97,6 +97,10 @@ const articleSchema = ogType === 'article' && publishedDate
     <link rel="alternate" hreflang="en" href={new URL(`${base}/en`, Astro.site)} />
     <link rel="alternate" type="application/rss+xml" title={`${siteName} — RSS`} href={feedHref} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="icon" type="image/x-icon" href={`${base}/favicon.ico`} sizes="any" />
+    <link rel="shortcut icon" href={`${base}/favicon.ico`} />
+    <link rel="manifest" href={`${base}/site.webmanifest`} />
+    <meta name="theme-color" content="#F9F7F4" />
 
     <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)}></script>
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
