@@ -5,6 +5,8 @@ const writingSchema = z.object({
   title: z.string(),
   subtitle: z.string().optional(),
   date: z.coerce.date(),
+  /** Date of last significant edit — used in dateModified JSON-LD, article:modified_time and sitemap lastmod. */
+  updatedDate: z.coerce.date().optional(),
   /** One-sentence thesis — rendered before the body. Forces the writer to have an argument. */
   position: z.string().optional(),
   type: z.enum(['essay', 'case']),

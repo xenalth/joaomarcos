@@ -10,9 +10,11 @@ interface Props {
   slug?: string;
   ogType?: 'website' | 'article';
   publishedDate?: Date;
+  updatedDate?: Date;
 }
 
-const { title, description, lang, slug, ogType = 'website', publishedDate } = Astro.props;
+const { title, description, lang, slug, ogType = 'website', publishedDate, updatedDate } = Astro.props;
+const effectiveModified = updatedDate ?? publishedDate;
 const siteName = 'João Marcos';
 const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -65,7 +67,7 @@ const articleSchema = ogType === 'article' && publishedDate
       headline: title,
       description: ogDescription,
       datePublished: publishedDate.toISOString(),
-      dateModified: publishedDate.toISOString(),
+      dateModified: (effectiveModified ?? publishedDate).toISOString(),
       inLanguage: locale,
       mainEntityOfPage: {
         '@type': 'WebPage',
@@ -105,6 +107,7 @@ const articleSchema = ogType === 'article' && publishedDate
     {ogImage && <meta property="og:image:height" content="630" />}
     {ogImage && <meta property="og:image:type" content="image/png" />}
     {publishedDate && <meta property="article:published_time" content={publishedDate.toISOString()} />}
+    {effectiveModified && <meta property="article:modified_time" content={effectiveModified.toISOString()} />}
     {ogType === 'article' && <meta property="article:author" content={siteName} />}
 
     <!-- Twitter / LinkedIn -->

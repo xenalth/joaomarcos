@@ -8,12 +8,13 @@ interface Props {
   lang: 'pt' | 'en';
   slug: string;
   date: Date;
+  updatedDate?: Date;
   type: 'essay' | 'case';
   position?: string;
   readingTime: string;
 }
 
-const { title, subtitle, description, lang, slug, date, type, position, readingTime } = Astro.props;
+const { title, subtitle, description, lang, slug, date, updatedDate, type, position, readingTime } = Astro.props;
 
 const typeLabel = {
   pt: { essay: 'Ensaio', case: 'Case' },
@@ -34,7 +35,7 @@ const shareCopyLabel = lang === 'pt' ? 'Copiar link' : 'Copy link';
 const shareCopySuccessLabel = lang === 'pt' ? 'Link copiado' : 'Link copied';
 ---
 
-<BaseLayout {title} description={description || position} {lang} {slug} ogType="article" publishedDate={date}>
+<BaseLayout {title} description={description || position} {lang} {slug} ogType="article" publishedDate={date} {updatedDate}>
   <div class="page-shell">
     <article>
       <header class="essay-header">

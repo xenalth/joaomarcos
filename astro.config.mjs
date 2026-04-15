@@ -6,7 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
-/** Build a URL → YYYY-MM-DD map from MDX frontmatter dates at config time. */
+/** Build a URL → YYYY-MM-DD map from MDX frontmatter dates at config time.
+ *  Uses updatedDate when present, falls back to date. */
 function buildDateMap() {
   /** @type {Record<string, string>} */
   const map = {};
@@ -26,8 +27,10 @@ function buildDateMap() {
     for (const file of readdirSync(join(process.cwd(), dir))) {
       if (!file.endsWith('.mdx')) continue;
       const content = readFileSync(join(process.cwd(), dir, file), 'utf-8');
-      const m = content.match(/^date:\s*(\d{4}-\d{2}-\d{2})/m);
-      if (m) map[url(file.replace('.mdx', ''))] = m[1];
+      const updated = content.match(/^updatedDate:\s*(\d{4}-\d{2}-\d{2})/m);
+      const published = content.match(/^date:\s*(\d{4}-\d{2}-\d{2})/m);
+      const date = updated?.[1] ?? published?.[1];
+      if (date) map[url(file.replace('.mdx', ''))] = date;
     }
   }
   return map;
