@@ -91,16 +91,16 @@ export async function generateOgImage({ title, subtitle, type, lang }: OgImageOp
       },
     }, title),
 
-    // Subtitle (optional)
+    // Subtitle (optional) — smaller font for longer strings (position field)
     ...(subtitle ? [h('div', {
       style: {
         display: 'flex',
-        fontSize: '22px',
+        fontSize: subtitle.length > 80 ? '18px' : '22px',
         fontFamily: 'Lora',
         fontWeight: 400,
         fontStyle: 'italic',
         color: '#76706A',
-        lineHeight: 1.45,
+        lineHeight: 1.5,
       },
     }, subtitle)] : []),
 

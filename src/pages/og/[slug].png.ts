@@ -4,21 +4,21 @@ import { generateOgImage } from '../../lib/og-image';
 
 export async function getStaticPaths() {
   const posts = await getCollection('writing-pt', ({ data }) => !data.draft);
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: {
-      title: post.data.title,
-      subtitle: post.data.subtitle,
-      type: post.data.type,
-    },
-  }));
+  return posts.map((post) => ({ params: { slug: post.id } }));
 }
 
-export const GET: APIRoute = async ({ props }) => {
+export const GET: APIRoute = async ({ params }) => {
+  const posts = await getCollection('writing-pt', ({ data }) => !data.draft);
+  const post = posts.find((p) => p.id === params.slug);
+
+  if (!post) {
+    return new Response('Not found', { status: 404 });
+  }
+
   const png = await generateOgImage({
-    title: props.title,
-    subtitle: props.subtitle,
-    type: props.type,
+    title: post.data.title,
+    subtitle: post.data.subtitle ?? post.data.position,
+    type: post.data.type,
     lang: 'pt',
   });
 
