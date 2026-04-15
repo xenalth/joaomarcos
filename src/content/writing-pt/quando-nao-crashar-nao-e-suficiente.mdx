@@ -16,27 +16,27 @@ Abri o jogo. Metade carregou. A outra metade simplesmente... não foi trabalhar.
 
 Sem erro. Sem aviso. Sem nada.
 
-Quem joga LoL sabe que esse tipo de situação não é novidade. O mantra da comunidade é velho: "o client é uma merda", "parece que tá em beta", "mais de 15 anos e não conseguem arrumar". E olha o tamanho disso — o MOBA mais jogado do mundo, com anos de receita pra investir, ainda gera essa percepção em quem joga.
+Quem joga LoL sabe que esse tipo de situação não é novidade. O mantra da comunidade é velho: "o client é uma merda", "parece que tá em beta", "mais de 15 anos e não conseguem arrumar". E olha o tamanho disso: o MOBA mais jogado do mundo, com anos de receita pra investir, ainda gera essa percepção em quem joga.
 
 ## Investigação
 
-O client abriu, eu aparecia online — mas meu nome tinha sumido. Lista de amigos vazia, e eu tenho um monte de desocupado lá que tá sempre conectado. Tinha até aquele botãozinho de alerta no canto, sabe? O que acende quando tá tendo algum problema no servidor.
+O client abriu, eu aparecia online. Mas meu nome tinha sumido. Lista de amigos vazia, e eu tenho um monte de desocupado lá que tá sempre conectado. Tinha até aquele botãozinho de alerta no canto, sabe? O que acende quando tá tendo algum problema no servidor.
 
 Azul. Tudo bem. Nenhum erro visível.
 
-Fui no site de status da Riot. Operacional. Abri a Twitch — uma carrada de gente jogando, inclusive BR. Entrei no site da Riot e logei normal.
+Fui no site de status da Riot. Operacional. Abri a Twitch: uma carrada de gente jogando, inclusive BR. Entrei no site da Riot e logei normal.
 
 Mas o client continuava morto.
 
 Foi aí que tirei a skin gamer e vesti o crachá de dev.
 
-Fui nos logs. Tinha um ERROR em maiúsculo me encarando. Joguei no ChatGPT — ele identificou problema de SSL e me deu um link pra acessar direto no navegador. Erro de certificado.
+Fui nos logs. Tinha um ERROR em maiúsculo me encarando. Joguei no ChatGPT: ele identificou problema de SSL e me deu um link pra acessar direto no navegador. Erro de certificado.
 
-Até aí, nada demais. Mas aí veio a curiosidade: quem estava emitindo esse certificado?
+Até aí, nada demais. Quem estava emitindo esse certificado?
 
 Não era a Riot.
 
-Era a Cisco Umbrella — o que levantou a hipótese de interceptação de rede. Troquei pro 4G roteado do celular: funcionou na hora. Voltei pro Wi-Fi: quebrou de novo.
+Era a Cisco Umbrella. O que levantou a hipótese de interceptação de rede. Troquei pro 4G roteado do celular: funcionou na hora. Voltei pro Wi-Fi: quebrou de novo.
 
 Alterei o DNS pra 1.1.1.1. Client voltou. Pleno. Como se nada tivesse acontecido.
 
@@ -46,7 +46,7 @@ E foi exatamente esse "como se nada tivesse acontecido" que não saiu da minha c
 
 A Riot sabe.
 
-Não tem como não saber. Se o client rejeita conexão com certificado de emissor desconhecido — e rejeita corretamente, por sinal — significa que ele verifica. Significa que em algum momento alguém implementou essa validação conscientemente.
+Não tem como não saber. Se o client rejeita conexão com certificado de emissor desconhecido (e rejeita corretamente, por sinal) significa que ele verifica. Significa que em algum momento alguém implementou essa validação conscientemente.
 
 Então o client sabia que tinha algo errado.
 
@@ -54,21 +54,21 @@ Ele só não me contou. Me deixou ali, com cara de taxo na frente da tela, como 
 
 Do ponto de vista de segurança? Decisão certíssima. Não aceitar certificado de emissor desconhecido é exatamente o que evita ataque man-in-the-middle. O time de engenharia fez o dever de casa.
 
-Mas aqui está o problema: a engenharia tomou uma decisão técnica correta — e produto não estava na sala quando essa decisão foi tomada.
+A engenharia tomou uma decisão técnica correta. Produto não estava na sala quando essa decisão foi tomada.
 
-Porque se estivesse, alguém teria perguntado: ok, a gente rejeita a conexão — mas o que o usuário vê?
+Porque se estivesse, alguém teria perguntado: ok, a gente rejeita a conexão. Mas o que o usuário vê?
 
-A resposta atual é: nada.
+Nada.
 
 E "nada" não é uma resposta aceitável. É uma decisão de produto que ninguém assumiu ter tomado.
 
-## Evitar crash não é o mesmo que garantir experiência
+## Working but broken
 
-Um sistema pode estar tecnicamente no ar — sem crash, sem erro, sem alerta — e ainda assim ter deixado completamente de funcionar para quem importa.
+Um sistema pode estar tecnicamente no ar. Sem crash, sem erro, sem alerta. E ainda assim ter deixado completamente de funcionar para quem importa.
 
 Para o usuário, não importa se a aplicação não crashou. Não importa se ficou aberta em modo *working but broken*. Ele não conseguiu jogar. Fim.
 
-Eu vivi o lado oposto disso num produto que trabalhei. Quando desenhamos o processo de sincronização de cardápio entre dispositivos, começamos a receber reclamações de lentidão — que a aplicação ficava travada no "Atualizando Cardápio". O processo não demorava mais que 25 segundos para um cardápio médio. Tecnicamente, estava funcionando.
+Eu vivi o lado oposto disso num produto que trabalhei. Quando desenhamos o processo de sincronização de cardápio entre dispositivos, começamos a receber reclamações de lentidão: a aplicação ficava travada no "Atualizando Cardápio". O processo não demorava mais que 25 segundos para um cardápio médio. Tecnicamente, estava funcionando.
 
 Mas o usuário não sabia disso.
 
@@ -76,10 +76,10 @@ A solução não foi otimizar o tempo. Foi incrementar com mensagens específica
 
 As reclamações cessaram. Mesma velocidade. Experiência completamente diferente.
 
-Isso é o que produto faz — ou deveria fazer. Não é só garantir que a aplicação não quebra. É garantir que o usuário entende o que está acontecendo, tem contexto para interpretar o que vê, e sai da interação sem a sensação de que foi abandonado no escuro.
+O client do LoL sabia que tinha algo errado. Escolheu não me contar.
+
+Isso não é um bug de engenharia. É uma ausência de produto.
 
 <PullQuote>
   Decisão técnica certa + experiência invisível = produto quebrado. Não importa quantos catches o time de engenharia implementou.
 </PullQuote>
-
-De que vale o time de engenharia pensar em todos os tratamentos de erro se produto não garante que o usuário sabe o que está acontecendo?

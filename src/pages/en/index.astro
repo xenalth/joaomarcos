@@ -9,12 +9,12 @@ const recent = allPosts
   .slice(0, 4);
 ---
 
-<BaseLayout title="João Marcos" lang="en" description="Head of Product · Payments & Fintech. Writes about product ethics, decision-making, and what teams owe the people they build for.">
+<BaseLayout title="João Marcos" lang="en" description="Head of Product · Payments & Fintech. Product has far more power over human behavior than anyone is willing to admit.">
   <div class="page-shell">
     <section class="hero">
-      <h1>I think about what product teams owe the people they're building for.</h1>
+      <h1>Product has far more power over human behavior than anyone is willing to admit.</h1>
       <p class="tagline">Head of Product · Payments & Fintech · São Paulo</p>
-      <p>Over a decade in tech, the last seven in product. The intersection of product decision-making and ethics is still treated as a footnote. I'm writing about it.</p>
+      <p>Over a decade in tech, the last seven in product. As it moves fast, some questions are getting left behind. These are mine.</p>
     </section>
 
     {recent.length > 0 && (
@@ -26,8 +26,10 @@ const recent = allPosts
               <a href={`${base}/en/writing/${post.id}`}>
                 <span>{post.data.title}</span>
                 <span class="item-meta">
-                  {post.data.type === 'essay' ? 'Essay' : 'Case'} ·{' '}
-                  {post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  <span class={`tag tag--${post.data.type}`}>
+                    {post.data.type === 'essay' ? 'Essay' : 'Case'}
+                  </span>
+                  <time>{post.data.date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</time>
                 </span>
               </a>
             </li>
@@ -99,11 +101,16 @@ const recent = allPosts
   }
   .home-list a:hover { color: var(--color-accent); }
   .item-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .item-meta time {
     font-family: var(--font-sans);
     font-size: 0.75rem;
     color: var(--color-text-muted);
-    white-space: nowrap;
-    flex-shrink: 0;
   }
   .see-all {
     display: inline-block;
