@@ -1,0 +1,121 @@
+---
+import BaseLayout from '../components/layout/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title="404" lang="pt" description="Página não encontrada.">
+  <div class="page-shell">
+    <section class="not-found" data-base={base}>
+      <p class="code">404</p>
+      <h1 id="not-found-title">Página não encontrada.</h1>
+      <p id="not-found-lead" class="lead">O link pode estar quebrado, desatualizado, ou a página pode ter sido movida.</p>
+
+      <div class="actions">
+        <a id="not-found-home" href={`${base}/`}>← Voltar para início</a>
+        <a id="not-found-writing" href={`${base}/escrita`}>Ir para escrita</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const section = document.querySelector('.not-found');
+  const basePath = section?.getAttribute('data-base') || '';
+  const isEnglishPath = window.location.pathname.startsWith(`${basePath}/en/`) || window.location.pathname === `${basePath}/en`;
+
+  if (isEnglishPath) {
+    const titleEl = document.getElementById('not-found-title');
+    const leadEl = document.getElementById('not-found-lead');
+    const homeEl = document.getElementById('not-found-home');
+    const writingEl = document.getElementById('not-found-writing');
+    document.documentElement.lang = 'en';
+
+    if (titleEl) {
+      titleEl.textContent = 'Page not found.';
+    }
+    if (leadEl) {
+      leadEl.textContent = 'The link may be broken, outdated, or the page may have moved.';
+    }
+    if (homeEl) {
+      homeEl.textContent = '← Back to home';
+      homeEl.setAttribute('href', `${basePath}/en`);
+    }
+    if (writingEl) {
+      writingEl.textContent = 'Go to writing';
+      writingEl.setAttribute('href', `${basePath}/en/writing`);
+    }
+  }
+</script>
+
+<style>
+  .not-found {
+    max-width: var(--prose-width);
+    margin: 0 auto;
+    padding: var(--space-24) 0 var(--space-24);
+  }
+
+  .code {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin-bottom: var(--space-4);
+  }
+
+  h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    font-weight: 500;
+    line-height: var(--leading-tight);
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-6);
+    color: var(--color-text);
+  }
+
+  .lead {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--color-text-subtle);
+    max-width: 52ch;
+  }
+
+  .actions {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+  }
+
+  #not-found-writing {
+    margin-left: auto;
+  }
+
+  .actions a {
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
+  }
+
+  @media (max-width: 760px) {
+    .not-found {
+      padding: var(--space-16) 0 var(--space-16);
+    }
+
+    .actions {
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    #not-found-writing {
+      margin-left: 0;
+    }
+  }
+</style>
