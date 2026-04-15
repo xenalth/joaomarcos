@@ -4,9 +4,12 @@
   --color-bg:           #F9F7F4;
   --color-text:         #1A1A1A;
   --color-text-muted:   #6B6B6B;
+  --color-text-subtle:  #76706A;
   --color-accent:       #2B4C3F;
   --color-accent-hover: #1e3830;
   --color-border:       #E2DDD8;
+  --color-link-underline: #B8D4C8;
+  --color-nav-bg:       rgba(249, 247, 244, 0.9);
 
   /* Typography */
   --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
@@ -42,4 +45,8 @@
   --page-max:     1100px;
   --page-pad:     clamp(1.5rem, 5vw, 4rem);
   --nav-height:   56px;
+
+  /* Link styling */
+  --link-underline-thickness: 1px;
+  --link-underline-offset: 0.14em;
 }

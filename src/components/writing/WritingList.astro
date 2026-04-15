@@ -51,6 +51,10 @@ function formatDate(date: Date): string {
     grid-template-columns: 1fr auto;
     gap: var(--space-6);
     align-items: baseline;
+    transition: border-color 0.16s ease;
+  }
+  .writing-item:hover {
+    border-color: #d5cfc9;
   }
   .writing-item:last-child {
     border-bottom: 1px solid var(--color-border);
@@ -58,11 +62,14 @@ function formatDate(date: Date): string {
   .writing-item a {
     font-family: var(--font-serif);
     font-size: var(--text-base);
+    line-height: 1.45;
     color: var(--color-text);
-    transition: color 0.15s;
+    transition: color 0.15s ease, transform 0.16s ease;
+    text-decoration: none;
   }
   .writing-item a:hover {
     color: var(--color-accent);
+    transform: translateX(2px);
   }
   .item-meta {
     display: flex;
@@ -73,7 +80,18 @@ function formatDate(date: Date): string {
   time {
     font-family: var(--font-sans);
     font-size: 0.75rem;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     white-space: nowrap;
+  }
+
+  @media (max-width: 760px) {
+    .writing-item {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+      padding: var(--space-4) 0;
+    }
+    .item-meta {
+      justify-content: flex-start;
+    }
   }
 </style>

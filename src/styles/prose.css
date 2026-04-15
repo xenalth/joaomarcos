@@ -35,19 +35,22 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-text-subtle);
   margin-top: 2em;
   margin-bottom: 0.6em;
 }
 
 .prose a {
   color: var(--color-accent);
-  border-bottom: 1px solid #B8D4C8;
-  transition: border-color 0.15s;
+  text-decoration: underline;
+  text-decoration-color: var(--color-link-underline);
+  text-decoration-thickness: var(--link-underline-thickness);
+  text-underline-offset: var(--link-underline-offset);
+  transition: color 0.15s, text-decoration-color 0.15s;
 }
 .prose a:hover {
   color: var(--color-accent-hover);
-  border-color: var(--color-accent);
+  text-decoration-color: currentColor;
 }
 
 .prose strong {
@@ -71,7 +74,7 @@
   padding-left: 1.25rem;
   margin: 2em 0;
   font-style: italic;
-  color: var(--color-text-muted);
+  color: var(--color-text-subtle);
 }
 
 .prose hr {

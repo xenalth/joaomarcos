@@ -57,13 +57,13 @@ const recent = allPosts
   .tagline {
     font-family: var(--font-sans);
     font-size: var(--text-sm);
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     letter-spacing: 0.03em;
     margin-bottom: var(--space-6);
   }
   .hero p {
     font-size: var(--text-base);
-    color: var(--color-text-muted);
+    color: var(--color-text);
     line-height: 1.7;
     max-width: 54ch;
   }
@@ -80,7 +80,7 @@ const recent = allPosts
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     margin-bottom: var(--space-6);
   }
   .home-list {
@@ -89,6 +89,10 @@ const recent = allPosts
   .home-list li {
     border-top: 1px solid var(--color-border);
     padding: var(--space-4) 0;
+    transition: border-color 0.16s ease;
+  }
+  .home-list li:hover {
+    border-color: #d5cfc9;
   }
   .home-list li:last-child {
     border-bottom: 1px solid var(--color-border);
@@ -101,10 +105,11 @@ const recent = allPosts
     font-family: var(--font-serif);
     font-size: var(--text-base);
     color: var(--color-text);
-    transition: color 0.15s;
+    transition: color 0.15s ease, transform 0.16s ease;
   }
   .home-list a:hover {
     color: var(--color-accent);
+    transform: translateX(2px);
   }
   .item-meta {
     display: flex;
@@ -116,7 +121,7 @@ const recent = allPosts
   .item-meta time {
     font-family: var(--font-sans);
     font-size: 0.75rem;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
   }
   .see-all {
     display: inline-block;
@@ -124,7 +129,27 @@ const recent = allPosts
     font-family: var(--font-sans);
     font-size: var(--text-sm);
     color: var(--color-accent);
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 1px;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
+  }
+
+  @media (max-width: 760px) {
+    .hero {
+      padding: var(--space-16) 0 var(--space-12);
+    }
+    h1 {
+      font-size: clamp(1.55rem, 6.5vw, 2rem);
+    }
+    .recent {
+      padding-top: var(--space-8);
+    }
+    .home-list a {
+      display: block;
+      line-height: 1.45;
+    }
+    .item-meta {
+      margin-top: var(--space-2);
+    }
   }
 </style>

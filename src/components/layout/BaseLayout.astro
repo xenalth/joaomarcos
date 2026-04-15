@@ -21,6 +21,8 @@ const ogDescription = description || (lang === 'pt'
   : 'Thinking in public about product and ethics.');
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const feedHref = lang === 'pt' ? `${base}/feed.xml` : `${base}/en/feed.xml`;
+const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+const shouldLoadAnalytics = import.meta.env.PROD && Boolean(gaMeasurementId);
 ---
 
 <!doctype html>
@@ -52,6 +54,29 @@ const feedHref = lang === 'pt' ? `${base}/feed.xml` : `${base}/en/feed.xml`;
     <link rel="alternate" hreflang="en" href={new URL(`${base}/en`, Astro.site)} />
     <link rel="alternate" type="application/rss+xml" title={`${siteName} — RSS`} href={feedHref} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+
+    {shouldLoadAnalytics && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>
+        <script is:inline>
+          {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${gaMeasurementId}');`}
+        </script>
+      </>
+    )}
+    <script is:inline>
+      {`window.jmTrackEvent = function(name, params) {
+  if (typeof window.gtag === 'function') {
+    var baseParams = {
+      page_path: window.location.pathname,
+      page_lang: document.documentElement.lang || '',
+    };
+    window.gtag('event', name, Object.assign(baseParams, params || {}));
+  }
+};`}
+    </script>
   </head>
   <body>
     <Nav lang={lang} slug={slug} />
@@ -64,7 +89,6 @@ const feedHref = lang === 'pt' ? `${base}/feed.xml` : `${base}/en/feed.xml`;
           {lang === 'pt'
             ? 'João Marcos · Pensamento em público sobre produto e ética.'
             : 'João Marcos · Thinking in public about product and ethics.'}
-          <a href={feedHref} class="rss-link">RSS</a>
         </p>
       </div>
     </footer>
@@ -88,16 +112,6 @@ const feedHref = lang === 'pt' ? `${base}/feed.xml` : `${base}/en/feed.xml`;
   .footer-inner {
     font-family: var(--font-sans);
     font-size: var(--text-xs);
-    color: var(--color-text-muted);
-  }
-  .rss-link {
-    margin-left: var(--space-4);
-    color: var(--color-accent);
-    border-bottom: 1px solid #B8D4C8;
-    padding-bottom: 1px;
-  }
-  .rss-link:hover {
-    color: var(--color-accent-hover);
-    border-color: var(--color-accent);
+    color: var(--color-text-subtle);
   }
 </style>

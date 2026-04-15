@@ -7,6 +7,7 @@ interface Props {
 
 const { lang, slug } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const links = {
   pt: { writing: `${base}/escrita`, about: `${base}/sobre`, contact: `${base}/contato`, writingLabel: 'Escrita', aboutLabel: 'Sobre', contactLabel: 'Contato', altLang: 'EN', altHref: slug ? `${base}/en/writing/${slug}` : `${base}/en` },
@@ -14,26 +15,52 @@ const links = {
 };
 
 const t = links[lang];
+const homePath = lang === 'pt' ? `${base}/` : `${base}/en`;
+const isHome = pathname === (homePath.replace(/\/$/, '') || '/');
+const isWriting = pathname.startsWith(t.writing.replace(/\/$/, ''));
+const isAbout = pathname === (t.about.replace(/\/$/, '') || '/');
+const isContact = pathname === (t.contact.replace(/\/$/, '') || '/');
 ---
 
 <nav>
   <div class="nav-inner page-shell">
-    <a href={lang === 'pt' ? `${base}/` : `${base}/en`} class="nav-name">João Marcos</a>
+    <a href={homePath} class:list={['nav-name', isHome && 'is-active']} aria-current={isHome ? 'page' : undefined}>João Marcos</a>
     <ul class="nav-links">
-      <li><a href={t.writing}>{t.writingLabel}</a></li>
-      <li><a href={t.about}>{t.aboutLabel}</a></li>
-      <li><a href={t.contact}>{t.contactLabel}</a></li>
-      <li class="lang-switch"><a href={t.altHref}>{t.altLang}</a></li>
+      <li><a href={t.writing} class:list={[isWriting && 'is-active']} aria-current={isWriting ? 'page' : undefined}>{t.writingLabel}</a></li>
+      <li><a href={t.about} class:list={[isAbout && 'is-active']} aria-current={isAbout ? 'page' : undefined}>{t.aboutLabel}</a></li>
+      <li><a href={t.contact} class:list={[isContact && 'is-active']} aria-current={isContact ? 'page' : undefined}>{t.contactLabel}</a></li>
+      <li class="lang-switch"><a href={t.altHref} data-track-language-switch data-from-lang={lang} data-to-lang={t.altLang.toLowerCase()}>{t.altLang}</a></li>
     </ul>
   </div>
 </nav>
+
+<script>
+  const langSwitchLinks = document.querySelectorAll('[data-track-language-switch]');
+
+  for (const link of langSwitchLinks) {
+    link.addEventListener('click', () => {
+      const fromLang = link.getAttribute('data-from-lang') || '';
+      const toLang = link.getAttribute('data-to-lang') || '';
+
+      if (window.jmTrackEvent) {
+        window.jmTrackEvent('nav_language_switch_click', {
+          from_lang: fromLang,
+          to_lang: toLang,
+          location: 'nav',
+        });
+      }
+    });
+  }
+</script>
 
 <style>
   nav {
     position: sticky;
     top: 0;
     z-index: 10;
-    background-color: var(--color-bg);
+    background-color: var(--color-nav-bg);
+    backdrop-filter: saturate(130%) blur(8px);
+    -webkit-backdrop-filter: saturate(130%) blur(8px);
     border-bottom: 1px solid var(--color-border);
   }
   .nav-inner {
@@ -48,8 +75,12 @@ const t = links[lang];
     font-weight: 500;
     letter-spacing: -0.01em;
     color: var(--color-text);
+    text-decoration: none;
   }
   .nav-name:hover {
+    color: var(--color-accent);
+  }
+  .nav-name.is-active {
     color: var(--color-accent);
   }
   .nav-links {
@@ -64,14 +95,61 @@ const t = links[lang];
     font-weight: 400;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
+    text-decoration: none;
     transition: color 0.15s;
   }
   .nav-links a:hover {
     color: var(--color-text);
   }
+  .nav-links a.is-active {
+    color: var(--color-accent);
+  }
   .lang-switch {
     border-left: 1px solid var(--color-border);
     padding-left: 2rem;
+  }
+
+  @media (max-width: 760px) {
+    .nav-inner {
+      height: 52px;
+    }
+    .nav-links {
+      gap: 1rem;
+    }
+    .nav-links a {
+      letter-spacing: 0.04em;
+    }
+    .lang-switch {
+      padding-left: 1rem;
+    }
+  }
+
+  @media (max-width: 580px) {
+    .nav-inner {
+      height: auto;
+      min-height: 52px;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+    .nav-name {
+      font-size: 0.94rem;
+    }
+    .nav-links a {
+      font-size: 0.68rem;
+      letter-spacing: 0.03em;
+    }
+    .nav-links {
+      width: 100%;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .lang-switch {
+      margin-left: auto;
+    }
   }
 </style>

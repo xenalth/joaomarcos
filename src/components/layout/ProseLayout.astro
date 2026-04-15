@@ -28,6 +28,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const backHref = lang === 'pt' ? `${base}/escrita` : `${base}/en/writing`;
 const backLabel = lang === 'pt' ? '← Toda a escrita' : '← All writing';
 const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
+const shareNativeLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
 ---
 
 <BaseLayout {title} description={description || position} {lang} {slug} ogType="article" publishedDate={date}>
@@ -50,12 +51,137 @@ const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
       </div>
 
       <footer class="essay-footer">
-        <a href={backHref}>{backLabel}</a>
-        <span class="share-hint">{shareLabel}: <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener">LinkedIn</a></span>
+        <a href={backHref} data-track-article-back data-article-slug={slug} data-article-lang={lang}>{backLabel}</a>
+        <span class="share-hint share-desktop" data-share-desktop>{shareLabel}: <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`} target="_blank" rel="noopener" data-track-share-linkedin data-article-slug={slug} data-article-lang={lang}>LinkedIn</a></span>
+        <button
+          type="button"
+          class="share-native"
+          data-share-native
+          data-share-url={Astro.url.href}
+          data-share-title={title}
+          data-article-slug={slug}
+          data-article-lang={lang}
+          hidden
+        >
+          {shareNativeLabel}
+        </button>
       </footer>
     </article>
   </div>
 </BaseLayout>
+
+<script>
+  const trackEvent = (name, params = {}) => {
+    if (window.jmTrackEvent) {
+      window.jmTrackEvent(name, params);
+    }
+  };
+
+  const mobileQuery = window.matchMedia('(max-width: 760px)');
+
+  const syncShareUI = () => {
+    const footers = document.querySelectorAll('.essay-footer');
+
+    for (const footer of footers) {
+      const desktopShare = footer.querySelector('[data-share-desktop]');
+      const nativeShare = footer.querySelector('[data-share-native]');
+
+      if (desktopShare) {
+        desktopShare.hidden = mobileQuery.matches;
+      }
+      if (nativeShare) {
+        nativeShare.hidden = !mobileQuery.matches;
+      }
+    }
+  };
+
+  syncShareUI();
+  if (mobileQuery.addEventListener) {
+    mobileQuery.addEventListener('change', syncShareUI);
+  } else if (mobileQuery.addListener) {
+    mobileQuery.addListener(syncShareUI);
+  }
+
+  const shareButtons = document.querySelectorAll('[data-share-native]');
+
+  for (const button of shareButtons) {
+    button.addEventListener('click', async () => {
+      const shareUrl = button.getAttribute('data-share-url') || window.location.href;
+      const shareTitle = button.getAttribute('data-share-title') || document.title;
+      const articleSlug = button.getAttribute('data-article-slug') || '';
+      const articleLang = button.getAttribute('data-article-lang') || '';
+
+      trackEvent('article_share_native_click', {
+        article_slug: articleSlug,
+        article_lang: articleLang,
+        location: 'article_footer',
+      });
+
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: shareTitle,
+            url: shareUrl,
+          });
+          trackEvent('article_share_native_success', {
+            article_slug: articleSlug,
+            article_lang: articleLang,
+            location: 'article_footer',
+          });
+          return;
+        } catch (error) {
+          if (error && typeof error === 'object' && 'name' in error && error.name === 'AbortError') {
+            trackEvent('article_share_native_cancel', {
+              article_slug: articleSlug,
+              article_lang: articleLang,
+              location: 'article_footer',
+            });
+            return;
+          }
+        }
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        trackEvent('article_share_copy_link', {
+          article_slug: articleSlug,
+          article_lang: articleLang,
+          location: 'article_footer',
+        });
+      }
+    });
+  }
+
+  const backLinks = document.querySelectorAll('[data-track-article-back]');
+
+  for (const link of backLinks) {
+    link.addEventListener('click', () => {
+      const articleSlug = link.getAttribute('data-article-slug') || '';
+      const articleLang = link.getAttribute('data-article-lang') || '';
+
+      trackEvent('article_back_to_list_click', {
+        article_slug: articleSlug,
+        article_lang: articleLang,
+        location: 'article_footer',
+      });
+    });
+  }
+
+  const linkedInLinks = document.querySelectorAll('[data-track-share-linkedin]');
+
+  for (const link of linkedInLinks) {
+    link.addEventListener('click', () => {
+      const articleSlug = link.getAttribute('data-article-slug') || '';
+      const articleLang = link.getAttribute('data-article-lang') || '';
+
+      trackEvent('article_share_linkedin_click', {
+        article_slug: articleSlug,
+        article_lang: articleLang,
+        location: 'article_footer',
+      });
+    });
+  }
+</script>
 
 <style>
   .essay-header {
@@ -79,14 +205,14 @@ const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
     font-family: var(--font-serif);
     font-size: var(--text-base);
     font-style: italic;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     margin-bottom: var(--space-8);
   }
   .position {
     font-family: var(--font-serif);
     font-size: var(--text-lg);
     font-style: italic;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     border-left: 2px solid var(--color-accent);
     padding-left: var(--space-6);
     margin-bottom: var(--space-8);
@@ -98,11 +224,12 @@ const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
     gap: var(--space-3);
     font-family: var(--font-sans);
     font-size: var(--text-sm);
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
   }
   .sep { color: var(--color-border); }
 
   .essay-footer {
+    width: 100%;
     max-width: var(--prose-width);
     margin: var(--space-16) auto 0;
     padding: var(--space-8) 0 var(--space-24);
@@ -111,15 +238,75 @@ const shareLabel = lang === 'pt' ? 'Compartilhar' : 'Share';
     justify-content: space-between;
     align-items: center;
     gap: var(--space-8);
+    /* Keep the same ch basis as .prose so widths line up exactly. */
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+  }
+  .essay-footer > a,
+  .essay-footer > .share-hint,
+  .essay-footer > .share-native {
+    flex: 1;
     font-family: var(--font-sans);
     font-size: var(--text-sm);
+    white-space: nowrap;
+  }
+  .essay-footer > a {
+    text-align: left;
   }
   .essay-footer a {
     color: var(--color-accent);
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 1px;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
   }
   .share-hint {
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
+    text-align: right;
+  }
+  .share-native {
+    display: inline-flex;
+    justify-content: flex-end;
+    color: var(--color-accent);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
+  }
+
+  @media (max-width: 760px) {
+    .essay-header {
+      padding: var(--space-12) 0 var(--space-8);
+    }
+    h1 {
+      font-size: clamp(1.5rem, 7vw, 2rem);
+    }
+    .meta-row {
+      font-size: var(--text-xs);
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+    .essay-footer {
+      margin-top: var(--space-12);
+      padding: var(--space-6) 0 var(--space-16);
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .essay-footer > a,
+    .essay-footer > .share-hint,
+    .essay-footer > .share-native {
+      width: auto;
+      flex: 1;
+    }
+    .share-native {
+      justify-content: flex-end;
+    }
+    .share-hint {
+      text-align: left;
+    }
   }
 </style>

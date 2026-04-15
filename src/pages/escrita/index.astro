@@ -38,9 +38,18 @@ const posts = allPosts
   }
   p {
     font-size: var(--text-sm);
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     line-height: 1.65;
     max-width: 52ch;
     font-style: italic;
+  }
+
+  @media (max-width: 760px) {
+    .writing-header {
+      padding: var(--space-12) 0 var(--space-8);
+    }
+    h1 {
+      font-size: clamp(1.5rem, 7vw, 2rem);
+    }
   }
 </style>

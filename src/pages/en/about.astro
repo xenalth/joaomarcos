@@ -60,8 +60,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
   p { margin-bottom: 1.5em; color: var(--color-text); }
   .lead { font-size: var(--text-lg); line-height: 1.7; }
-  a { color: var(--color-accent); border-bottom: 1px solid #B8D4C8; }
-  a:hover { color: var(--color-accent-hover); border-color: var(--color-accent); }
+  a {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-link-underline);
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
+  }
+  a:hover {
+    color: var(--color-accent-hover);
+    text-decoration-color: currentColor;
+  }
 
   .beliefs {
     border-top: 1px solid var(--color-border);
@@ -75,10 +83,24 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--color-text-subtle);
     margin-bottom: var(--space-6);
   }
   ul { list-style: none; display: flex; flex-direction: column; gap: var(--space-3); }
   li { padding-left: var(--space-6); position: relative; color: var(--color-text); line-height: 1.6; }
   li::before { content: '—'; position: absolute; left: 0; color: var(--color-accent); }
+
+  @media (max-width: 760px) {
+    .about-content {
+      padding: var(--space-12) 0 var(--space-16);
+    }
+    h1 {
+      font-size: clamp(1.55rem, 7vw, 2rem);
+      margin-bottom: var(--space-8);
+    }
+    .lead {
+      font-size: var(--text-base);
+      line-height: 1.75;
+    }
+  }
 </style>

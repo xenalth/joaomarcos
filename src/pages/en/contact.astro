@@ -35,8 +35,23 @@ import BaseLayout from '../../components/layout/BaseLayout.astro';
     margin-bottom: 1.25em;
     color: var(--color-text);
   }
-  a { color: var(--color-accent); border-bottom: 1px solid #B8D4C8; }
-  a:hover { border-color: var(--color-accent); }
-  .note { font-size: var(--text-sm); color: var(--color-text-muted); font-style: italic; }
+  a {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-link-underline);
+    text-decoration-thickness: var(--link-underline-thickness);
+    text-underline-offset: var(--link-underline-offset);
+  }
+  a:hover { text-decoration-color: currentColor; }
+  .note { font-size: var(--text-sm); color: var(--color-text-subtle); font-style: italic; }
   .links { margin-top: var(--space-8); display: flex; gap: var(--space-6); font-family: var(--font-sans); font-size: var(--text-sm); }
+
+  @media (max-width: 760px) {
+    .contact-content {
+      padding: var(--space-12) 0 var(--space-6);
+    }
+    h1 {
+      font-size: clamp(1.55rem, 7vw, 2rem);
+      margin-bottom: var(--space-6);
+    }
+  }
 </style>
