@@ -58,24 +58,26 @@ const shouldLoadAnalytics = import.meta.env.PROD && Boolean(gaMeasurementId);
     {shouldLoadAnalytics && (
       <>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}></script>
-        <script is:inline>
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${gaMeasurementId}');`}
+        <script is:inline define:vars={{ gaMeasurementId }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', gaMeasurementId);
         </script>
       </>
     )}
     <script is:inline>
-      {`window.jmTrackEvent = function(name, params) {
-  if (typeof window.gtag === 'function') {
-    var baseParams = {
-      page_path: window.location.pathname,
-      page_lang: document.documentElement.lang || '',
-    };
-    window.gtag('event', name, Object.assign(baseParams, params || {}));
-  }
-};`}
+      window.jmTrackEvent = function(name, params) {
+        if (typeof window.gtag === 'function') {
+          var baseParams = {
+            page_path: window.location.pathname,
+            page_lang: document.documentElement.lang || '',
+          };
+          window.gtag('event', name, Object.assign(baseParams, params || {}));
+        }
+      };
     </script>
   </head>
   <body>
